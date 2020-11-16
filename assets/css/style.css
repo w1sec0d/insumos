@@ -1,0 +1,54 @@
+body {
+    text-align: center;
+}
+
+#titulo-centro {
+    font-size: 3rem;
+}
+
+.select-container {
+    margin: 2vh;
+}
+
+table {
+    width: 90vh;
+}
+
+.table-container {
+    width: 80vw;
+}
+
+table tbody tr {
+    transition: background 0.5s;
+}
+
+table tbody tr:hover {
+    background-color: rgba(187, 219, 155, 0.6)!important;
+}
+
+.boton {
+    color: white;
+    font-weight: bold;
+    margin: 1vh;
+}
+
+.boton p {
+    display: inline-block;
+    margin: 0;
+}
+
+.color {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.color-rojo {
+    background: crimson;
+}
+
+.color-azul {
+    background: navy;
+}
