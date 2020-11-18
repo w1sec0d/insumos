@@ -41,72 +41,121 @@ if (!isset($_REQUEST["contrasena"])) {
 <body>
     <div class="container-fluid">
         <div class="row align-items-center justify-content-center">
-            <h1 class="text-center w-100" id="titulo-centro">Centro hospitalario</h1>
-            <br>
-            <div class="select-container">
-                <h2>Selecciona tu tipo de insumo</h2>
-                <select class="form-control">
-                    <option value='0'>-TOCA AQUÍ PARA SELECCIONAR UN TIPO-</option>
-                    <option value="bolsas">BOLSAS</option>
-                    <option value="liquidos">LÍQUIDOS</option>
-                    <option value="cafeteria">CAFETERIA</option>
-                    <option value="herramientas">HERRAMIENTAS</option>
-                    <option value="insumo">INSUMO GENERAL</option>
-                    <option value="epp">PROTECCIÓN PERSONAL</option>
-                    <option value="otros">OTROS</option>
-                </select>
+            <h1 class="text-center " id="titulo-centro">Centro hospitalario</h1>
+        </div>
+        <div class="row align-items-center justify-content-center">
+            <h2>Selecciona tu tipo de insumo</h2>
+        </div>
+        <div class="row align-items-center justify-content-center">
+            <div class="col-12">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="insumos.php#seccionBolsas"><button type="button" class="btn btn-secondary" style="border-radius: 0.25rem 0 0 0.25rem;"><i class="fas fa-shopping-bag"></i> Bolsas</button></a>
+                    <a href="insumos.php#seccionLiquidos"><button type="button" class="btn btn-secondary"><i class="fas fa-pump-soap"></i> Líquidos</button></a>
+                    <a href="insumos.php#seccionCafeteria"><button type="button" class="btn btn-secondary"><i class="fas fa-coffee"></i> Cafetería</button></a>
+                    <a href="insumos.php#seccionHerramientas"><button type="button" class="btn btn-secondary" style="border-radius: 0 0.25rem 0.25rem 0;"><i class="fas fa-broom"></i> Herramientas</button></a>
+                </div>
             </div>
+            <div class="col-12">
+                <div class="btn-group" role="group" aria-label="Basic example" style="margin-top: 1vh;">
+                    <a href="insumos.php#seccionInsumos"><button type="button" class="btn btn-secondary" style="border-radius: 0.25rem 0 0 0.25rem;"><i class="fas fa-soap"></i> Insumo General</button></a>
+                    <a href="insumos.php#seccionEpp"><button type="button" class="btn btn-secondary"><i class="fas fa-hard-hat"></i> Protección personal</button></a>
+                    <a href="insumos.php#seccionOtros"><button type="button" class="btn btn-secondary" style="border-radius: 0 0.25rem 0.25rem 0;"><i class="fas fa-plus-square"></i> Otros</button></a>
+                </div>
+            </div>
+        </div>
 
-            <div class="table-container">
-                <table class="table table-striped" id="table">
-                    <thead class="thead-dark">
+        <div class="row seccion align-items-center justify-content-center" id="seccionBolsas" style="background: rgb(250, 250, 250);">
+            <table class="table table-striped" id="tablaBolsas">
+                <h2 class="titulo-seccion"><i class="fas fa-shopping-bag"></i> Bolsas</h2>
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Color</th>
+                        <th>Dimensiones</th>
+                        <th>Cantidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE TIPO='BOLSAS';";
+                    $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+
+                    while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                    ?>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Color</th>
-                            <th>Dimensiones</th>
-                            <th>Cantidad</th>
-                            <th>Acciones</th>
+                            <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                            <td class="justify-content-center align-items-center">
+                                <?php
+                                $color = $arraySelectInsumos["COLOR"];
+                                $colorMinuscula = strtolower($color);
+                                echo "<p>" . $color . "</p> <div class='color color-$colorMinuscula'></div>"
+                                ?>
+                            </td>
+                            <td><?php echo $arraySelectInsumos["DIMENSIONES"] ?></td>
+                            <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            <td>
+                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionBolsas')">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    <p>
+                                        Entrada
+                                    </p>
+                                </div>
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaLiquidos')">
+                                    <i class=" fas fa-sign-out-alt"></i>
+                                    <p>
+                                        Salida
+                                    </p>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE TIPO='BOLSAS';";
-                        $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
 
-                        while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
-                        ?>
-                            <tr>
-                                <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
-                                <td>
-                                    <?php
-                                    $color = $arraySelectInsumos["COLOR"];
-                                    $colorMinuscula = $color;
-                                    echo $color + " <div class=\'color color-$color\'></div>"
-                                    ?>
-                                </td>
-                                <td><?php echo $arraySelectInsumos["DIMENSIONES"] ?></td>
-                                <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
-                                <td>
-                                    <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>')">
-                                        <i class="fas fa-sign-in-alt"></i>
-                                        <p>
-                                            Entrada
-                                        </p>
-                                    </div>
-                                    <div class="btn btn-danger boton align-items-center justify-content-center">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                        <p>
-                                            Salida
-                                        </p>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
+        <div class="row seccion align-items-center justify-content-center" id="seccionLiquidos">
+            <table class="table table-striped" id="tablaLiquidos">
+                <h2 class="titulo-seccion"><i class="fas fa-pump-soap"></i> Líquidos</h2>
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE TIPO='LIQUIDOS';";
+                    $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+
+                    while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                    ?>
+                        <tr>
+                            <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                            <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            <td>
+                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaLiquidos')">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    <p>
+                                        Entrada
+                                    </p>
+                                </div>
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaLiquidos')">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <p>
+                                        Salida
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>
@@ -139,29 +188,100 @@ if (!isset($_REQUEST["contrasena"])) {
             "colvis": "Visibilidad"
         }
     }
-    $(document).ready(function() {
-        $('#table').DataTable({
-            language: spanishTable, //establece el idioma
-            fixedHeader: true,
-            colReorder: true,
-            responsive: true
-        });
-    });
-
     // funciones entrada/salida
 
-    function entrada(idInsumo, nombreInsumo) {
+    function entrada(idInsumo, nombreInsumo, seccionInsumo) {
         nombreInsumo = nombreInsumo.toLowerCase();
         Swal.fire({
             title: '¿Cuanto del insumo "' + nombreInsumo + "\" ingresó?",
-            html: '<form method=\'POST\'>' +
-                '<input type=\'number\' class=\'form-control\' name=\'cantidadEntrada\' min=\'1\' max=\'999999\' required>' +
-                '<input type=\'submit\' class=\'btn btn-primary boton\' value=\'Continuar\' name=\'entradaInsumo\'>' +
+            html: '<form onsubmit=\'confirmarEntrada(' + idInsumo + ",\"" + nombreInsumo + "\",\"" + seccionInsumo + '\")' + '\'>' +
+                '<input type=\'number\' class=\'form-control\' id=\'cantidadEntrada\' min=\'1\' max=\'999999\' required>' +
+                '<input type=\'submit\' value=\'Continuar\' class=\'btn btn-primary\' style=\'margin-top: 2vh\'>' +
                 '</form>',
             showConfirmButton: false,
             showCloseButton: true
         });
     }
+
+    function salida(idInsumo, nombreInsumo, seccionInsumo) {
+        nombreInsumo = nombreInsumo.toLowerCase();
+        Swal.fire({
+            title: '¿Cuanto del insumo "' + nombreInsumo + "\" salió?",
+            html: '<form onsubmit=\'confirmarSalida(' + idInsumo + ",\"" + nombreInsumo + "\",\"" + seccionInsumo + '\")' + '\'>' +
+                '<input type=\'number\' class=\'form-control\' id=\'cantidadSalida\' min=\'1\' max=\'999999\' required>' +
+                '<input type=\'submit\' value=\'Continuar\' class=\'btn btn-primary\' style=\'margin-top: 2vh\'>' +
+                '</form>',
+            showConfirmButton: false,
+            showCloseButton: true
+        });
+    }
+
+    function confirmarEntrada(idInsumo, nombreInsumo, seccionInsumo) {
+        var cantidadEntrada = parseInt(document.getElementById("cantidadEntrada").value);
+        Swal.fire({
+            title: '¿Quieres registrar una entrada de ' + cantidadEntrada + ' "' + nombreInsumo + '"?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#007bff',
+            cancelButtonColor: '#dc3545',
+            confirmButtonText: 'Si, registrar',
+            cancelButtonText: "No, cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "../controller/controller.php?entradaInsumo=true&idInsumo=" + idInsumo + "&cantidadEntrada=" + cantidadEntrada + "&seccionInsumo=" + seccionInsumo;
+            }
+        })
+    }
+
+    function confirmarSalida(idInsumo, nombreInsumo, seccionInsumo) {
+        var cantidadSalida = parseInt(document.getElementById("cantidadSalida").value);
+        Swal.fire({
+            title: '¿Quieres registrar una salida de ' + cantidadSalida + ' "' + nombreInsumo + '"?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#007bff',
+            cancelButtonColor: '#dc3545',
+            confirmButtonText: 'Si, registrar',
+            cancelButtonText: "No, cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "../controller/controller.php?salidaInsumo=true&idInsumo=" + idInsumo + "&cantidadSalida=" + cantidadSalida + "&seccionInsumo=" + seccionInsumo;
+            }
+        })
+    }
+
+    $('#tablaBolsas').DataTable({
+        language: spanishTable, //establece el idioma
+        colReorder: true,
+        responsive: true
+    });
+    $('#tablaLiquidos').DataTable({
+        language: spanishTable, //establece el idioma
+        colReorder: true,
+        responsive: true
+    });
+
+    <?php
+    if (isset($_REQUEST["ingresoExitoso"])) {
+    ?>
+        Swal.fire({
+            icon: 'success',
+            title: '¡Ingreso de insumo registrado!',
+            showCloseButton: true,
+            timer: 7000
+        });
+    <?php
+    } else if (isset($_REQUEST["salidaExitosa"])) {
+    ?>
+        Swal.fire({
+            icon: 'success',
+            title: '¡Salida de insumo registrada!',
+            showCloseButton: true,
+            timer: 7000
+        });
+    <?php
+    }
+    ?>
 </script>
 
 </html>
