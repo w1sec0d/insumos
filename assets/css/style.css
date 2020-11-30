@@ -1,9 +1,30 @@
+/*     
+font-family: 'Lato', sans-serif;
+font-family: 'Ubuntu', sans-serif; 
+*/
+
 body {
     text-align: center;
+    font-family: 'Lato', sans-serif;
+    table-layout: fixed;
+    background-color: rgb(250, 250, 250);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Lato', sans-serif;
+}
+
+h1 {
+    font-weight: bold;
 }
 
 #titulo-centro {
-    font-size: 3rem;
+    margin-bottom: 10px;
 }
 
 .select-container {
@@ -12,6 +33,7 @@ body {
 
 table {
     width: 90vw!important;
+    max-width: 90vw!important;
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
@@ -70,18 +92,31 @@ td p {
     display: none;
 }
 
+.ENTRADA {
+    background: rgb(213, 245, 255)!important;
+}
+
+.SALIDA {
+    background: rgb(255, 209, 209)!important;
+}
+
 
 /*INSUMOS: IjMf[W8N0GOb7o9)**/
 
+#cabecera {
+    background-image: url("../img/back.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .seccion {
-    margin-top: 2vh;
-    padding-top: 2vh;
-    padding-bottom: 2vh;
+    padding-top: 4vh;
+    padding-bottom: 4vh;
 }
 
 .titulo-seccion {
     color: black;
-    font-weight: bold;
 }
 
 .btn-group button {
@@ -89,6 +124,46 @@ td p {
     color: white;
     font-weight: bold;
     border-radius: 0;
+}
+
+.boton-excel {
+    background: #28A745!important;
+    border: #28A745!important;
+    color: white!important;
+}
+
+.boton-excel:hover {
+    background: #218538!important;
+    border: #218538!important;
+}
+
+.boton-imprimir {
+    background: #fd7e14!important;
+    border: #fd7e14!important;
+    color: white!important;
+}
+
+.boton-imprimir:hover {
+    background: #c96310!important;
+    border: #c96310!important;
+}
+
+.dataTables_length {
+    margin-top: 2vh;
+}
+
+#cabecera {
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+
+#inputBusqueda {
+    max-width: 250px;
+    display: inline;
+}
+
+#botonBusqueda {
+    vertical-align: initial;
 }
 
 @media (max-width: 575.98px) {

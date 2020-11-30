@@ -39,8 +39,6 @@ if (!isset($_REQUEST["contrasena"])) {
 
     <script src="../assets/libraries/jquery.fittext.js"></script>
 
-    <link rel="shortcut icon" href="../assets/other/logo.ico" type="image/x-icon">
-
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lato&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -64,23 +62,18 @@ if (!isset($_REQUEST["contrasena"])) {
             </div>
             <div class="col-12">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <a onclick="mostrar('#seccionBolsas')"><button type="button" class="btn btn-secondary" style="border-radius: 0.25rem 0 0 0.25rem;"><i class="fas fa-shopping-bag"></i> Bolsas</button></a>
-                    <a onclick="mostrar('#seccionToallas')"><button type="button" class="btn btn-secondary"><i class="fas fa-toilet-paper"></i> Toallas</button></a>
-                    <a onclick="mostrar('#seccionLiquidos')"><button type="button" class="btn btn-secondary"><i class="fas fa-pump-soap"></i> Líquidos</button></a>
-                    <a onclick="mostrar('#seccionCafeteria')"><button type="button" class="btn btn-secondary" style="border-radius: 0 0.25rem 0.25rem 0;"><i class="fas fa-coffee"></i> Cafetería</button></a>
+                    <a href="insumos.php#seccionBolsas"><button type="button" class="btn btn-secondary" style="border-radius: 0.25rem 0 0 0.25rem;"><i class="fas fa-shopping-bag"></i> Bolsas</button></a>
+                    <a href="insumos.php#seccionToallas"><button type="button" class="btn btn-secondary"><i class="fas fa-toilet-paper"></i> Toallas</button></a>
+                    <a href="insumos.php#seccionLiquidos"><button type="button" class="btn btn-secondary"><i class="fas fa-pump-soap"></i> Líquidos</button></a>
+                    <a href="insumos.php#seccionCafeteria"><button type="button" class="btn btn-secondary" style="border-radius: 0 0.25rem 0.25rem 0;"><i class="fas fa-coffee"></i> Cafetería</button></a>
                 </div>
             </div>
             <div class="col-12">
                 <div class="btn-group" role="group" aria-label="Basic example" style="margin-top: 1vh;">
-                    <a onclick="mostrar('#seccionHerramientas')"><button type="button" class="btn btn-secondary" style="border-radius: 0.25rem 0 0 0.25rem;"><i class="fas fa-broom"></i> Herramientas</button></a>
-                    <a onclick="mostrar('#seccionInsumos')"><button type="button" class="btn btn-secondary"><i class="fas fa-soap"></i> Insumos</button></a>
-                    <a onclick="mostrar('#seccionEPP')"><button type="button" class="btn btn-secondary" style="border-radius: 0 0.25rem 0.25rem 0;"><i class="fas fa-hard-hat"></i> EPP</button></a>
+                    <a href="insumos.php#seccionHerramientas"><button type="button" class="btn btn-secondary" style="border-radius: 0.25rem 0 0 0.25rem;"><i class="fas fa-broom"></i> Herramientas</button></a>
+                    <a href="insumos.php#seccionInsumos"><button type="button" class="btn btn-secondary"><i class="fas fa-soap"></i> Insumos</button></a>
+                    <a href="insumos.php#seccionEPP"><button type="button" class="btn btn-secondary" style="border-radius: 0 0.25rem 0.25rem 0;"><i class="fas fa-hard-hat"></i> EPP</button></a>
                 </div>
-            </div>
-            <div class="col-12 align-items-center justify-content-center" style="margin-top: 10px;">
-                <h3>Buscar por nombre de insumo</h3>
-                <input type="text" id="inputBusqueda" class="form-control">
-                <button class="btn btn-primary" id="botonBusqueda" onclick="buscar()"><i class="fas fa-search"></i></button>
             </div>
         </div>
 
@@ -390,104 +383,9 @@ if (!isset($_REQUEST["contrasena"])) {
             </table>
         </div>
 
-        <div class="row seccion align-items-center justify-content-center" id="seccionTotal" style="background: rgb(250, 250, 250);">
-            <table class="table table-striped" id="tablaTotal">
-                <h2 class="titulo-seccion w-100">Listado de insumos</h2>
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Color</th>
-                        <th>Dimensiones</th>
-                        <th>Cantidad</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $idCentro = $_SESSION["idCentro"];
-                    $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE ID_CENTRO = '$idCentro';";
-                    $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
-
-                    while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
-                    ?>
-                        <tr>
-                            <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
-                            <td class="justify-content-center align-items-center">
-                                <?php
-                                if (isset($arraySelectInsumos["COLOR"])) {
-                                    $color = $arraySelectInsumos["COLOR"];
-                                    $colorMinuscula = strtolower($color);
-                                    echo "<p>" . $color . "</p> <div class='color color-$colorMinuscula'></div>";
-                                } else {
-                                    echo "---";
-                                }
-                                ?>
-                            </td>
-                            <td><?php if (isset($arraySelectInsumos["DIMENSIONES"])) {
-                                    echo $arraySelectInsumos["DIMENSIONES"];
-                                } else {
-                                    echo "---";
-                                } ?></td>
-                            <td><?php
-                                echo $arraySelectInsumos["CANTIDAD"];
-                                ?></td>
-                            <td>
-                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionBolsas')">
-                                    <i class="fas fa-sign-in-alt"></i>
-                                    <p>
-                                        Entrada
-                                    </p>
-                                </div>
-                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionBolsas')">
-                                    <i class=" fas fa-sign-out-alt"></i>
-                                    <p>
-                                        Salida
-                                    </p>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-
         <script>
             function isInPage(node) {
                 return (node === document.body) ? false : document.body.contains(node);
-            }
-
-            function mostrar(elemento) {
-                $('#seccionBolsas').hide();
-                $('#seccionToallas').hide();
-                $('#seccionCafeteria').hide();
-                $('#seccionLiquidos').hide();
-                $('#seccionHerramientas').hide();
-                $('#seccionInsumos').hide();
-                $('#seccionEPP').hide();
-                $('#seccionTotal').hide();
-                $(elemento).show();
-                $([document.documentElement, document.body]).animate({
-                    scrollTop: $(elemento).offset().top
-                }, 1200);
-            }
-
-            function buscar() {
-                $('#seccionBolsas').hide();
-                $('#seccionToallas').hide();
-                $('#seccionCafeteria').hide();
-                $('#seccionLiquidos').hide();
-                $('#seccionHerramientas').hide();
-                $('#seccionInsumos').hide();
-                $('#seccionEPP').hide();
-                var table = $('#tablaTotal').DataTable();
-                var text = document.getElementById("inputBusqueda").value;
-                $('#seccionTotal').show(400, "swing");
-                table.search(text).draw();
-                $([document.documentElement, document.body]).animate({
-                    scrollTop: $('#seccionTotal').offset().top
-                }, 1200);
             }
 
             var spanishTable = { // Variable que almacena la traduccion a español de la tabla
@@ -662,27 +560,6 @@ if (!isset($_REQUEST["contrasena"])) {
                         }
                     ]
                 });
-
-                $('tablaBolsas').DataTable({
-                    columnDefs: [{
-                            responsivePriority: 3,
-                            targets: 3
-                        },
-                        {
-                            responsivePriority: 4,
-                            targets: 4
-                        }
-                    ]
-                });
-
-                $('#seccionBolsas').hide();
-                $('#seccionToallas').hide();
-                $('#seccionLiquidos').hide();
-                $('#seccionCafeteria').hide();
-                $('#seccionHerramientas').hide();
-                $('#seccionInsumos').hide();
-                $('#seccionEPP').hide();
-                $('#seccionTotal').hide();
             }
             //Data tables
 
