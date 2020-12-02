@@ -155,6 +155,7 @@ td p {
 #cabecera {
     padding-top: 5vh;
     padding-bottom: 5vh;
+    border-bottom: 1px dashed black;
 }
 
 #inputBusqueda {

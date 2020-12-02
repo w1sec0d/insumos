@@ -2,21 +2,42 @@
 session_start();
 require_once '../model/database.php';
 
-if (!isset($_REQUEST["contrasena"])) {
-    if (!isset($_SESSION["autenticado"])) {
-        header("Location: ../index.php?error=true");
+if (isset($_REQUEST["x"])) {
+    switch ($_REQUEST["x"]) {
+        case 'tGLEIz4mzDpa':
+            $_SESSION["idCentro"] = 1;
+            $_SESSION["nombreCentro"] = "HOSPITAL SIMON BOLIVAR";
+            $_SESSION["x"] = "tGLEIz4mzDpa";
+            break;
+        case 'xXS2owJKOT17':
+            $_SESSION["idCentro"] = 2;
+            $_SESSION["nombreCentro"] = "HOSPITAL TUNAL";
+            $_SESSION["x"] = "xXS2owJKOT17";
+            break;
+        case 'A3wpJD4qfDvc':
+            $_SESSION["idCentro"] = 3;
+            $_SESSION["nombreCentro"] = "HOSPITAL SANTA CLARA";
+            $_SESSION["x"] = "A3wpJD4qfDvc";
+            break;
+        case 'CualZwMtQjbx':
+            $_SESSION["idCentro"] = 4;
+            $_SESSION["nombreCentro"] = "HOSPITAL KENNEDY";
+            $_SESSION["x"] = "CualZwMtQjbx";
+            break;
+        case 'GCcJAWBN0irc':
+            header("Location: ./admin.php");
+            $_SESSION["x"] = "GCcJAWBN0irc";
+            $_SESSION["admin"] = true;
+            break;
+
+        default:
+            header("Location: ../index.php?error=true");
+            break;
     }
 } else {
-    if ($_REQUEST["contrasena"] == 123) {
-        $_SESSION["autenticado"] = true;
-        $_SESSION["idCentro"] = 1;
-        $_SESSION["nombreCentro"] = "Hospital Simón Bolivar";
-    } else if ($_REQUEST["contrasena"] == 321) {
-        header("Location: ./admin.php");
-    } else {
-        header("Location: ../index.php?error=true");
-    }
+    header("Location: ../index.php?error=true");
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,8 +70,11 @@ if (!isset($_REQUEST["contrasena"])) {
 </head>
 
 <body>
-    <div class="container-fluid">
 
+    <div class="container-fluid">
+        <div class="row">
+            <?php require_once 'navbar.php'; ?>
+        </div>
         <div class="row align-items-center justify-content-center" id="cabecera">
             <div class="col-12 align-items-center justify-content-center">
                 <h1 id="titulo-pagina">Inventario de Insumos</h1>
@@ -122,7 +146,7 @@ if (!isset($_REQUEST["contrasena"])) {
                                         Entrada
                                     </p>
                                 </div>
-                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionBolsas')">
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionBolsas',false,false)">
                                     <i class=" fas fa-sign-out-alt"></i>
                                     <p>
                                         Salida
@@ -165,7 +189,7 @@ if (!isset($_REQUEST["contrasena"])) {
                                         Entrada
                                     </p>
                                 </div>
-                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionToallas',true)">
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionToallas',true,false)">
                                     <i class=" fas fa-sign-out-alt"></i>
                                     <p>
                                         Salida
@@ -201,13 +225,13 @@ if (!isset($_REQUEST["contrasena"])) {
                             <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
                             <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
                             <td>
-                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaLiquidos')">
+                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionLiquidos')">
                                     <i class="fas fa-sign-in-alt"></i>
                                     <p>
                                         Entrada
                                     </p>
                                 </div>
-                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaLiquidos',false)">
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionLiquidos',false,false)">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <p>
                                         Salida
@@ -243,13 +267,13 @@ if (!isset($_REQUEST["contrasena"])) {
                             <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
                             <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
                             <td>
-                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaCafeteria')">
+                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionCafeteria')">
                                     <i class="fas fa-sign-in-alt"></i>
                                     <p>
                                         Entrada
                                     </p>
                                 </div>
-                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaCafeteria',false)">
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionCafeteria',false,false)">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <p>
                                         Salida
@@ -285,13 +309,13 @@ if (!isset($_REQUEST["contrasena"])) {
                             <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
                             <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
                             <td>
-                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaHerramientas')">
+                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionHerramientas')">
                                     <i class="fas fa-sign-in-alt"></i>
                                     <p>
                                         Entrada
                                     </p>
                                 </div>
-                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaHerramientas',true)">
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionHerramientas',true,false)">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <p>
                                         Salida
@@ -327,13 +351,13 @@ if (!isset($_REQUEST["contrasena"])) {
                             <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
                             <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
                             <td>
-                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaInsumos',false)">
+                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionInsumos',false,false)">
                                     <i class="fas fa-sign-in-alt"></i>
                                     <p>
                                         Entrada
                                     </p>
                                 </div>
-                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaInsumos')">
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionInsumos')">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <p>
                                         Salida
@@ -369,19 +393,47 @@ if (!isset($_REQUEST["contrasena"])) {
                             <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
                             <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
                             <td>
-                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaEPP')">
+                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionEPP')">
                                     <i class="fas fa-sign-in-alt"></i>
                                     <p>
                                         Entrada
                                     </p>
                                 </div>
-                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','tablaEPP',false)">
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionEPP',false,true)">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <p>
                                         Salida
                                     </p>
                                 </div>
                             </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+            <table class="table table-striped" id="tablaMovimientosEPP">
+                <h2 class="titulo-seccion w-100"><i class="fas fa-exchange-alt"></i> Movimientos EPP</h2>
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Insumo</th>
+                        <th>Persona</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $selectEPP = "SELECT * FROM VISTA_TRANSACCION WHERE TIPO_INSUMO='EPP' AND ID_CENTRO = '$idCentro';";
+                    $resultadoSelectEPP = mysqli_query($connection, $selectEPP);
+
+                    while ($arraySelectEPP = mysqli_fetch_array($resultadoSelectEPP)) {
+                    ?>
+                        <tr>
+                            <td><?php echo $arraySelectEPP["FECHA"] ?></td>
+                            <td><?php echo $arraySelectEPP["NOMBRE_INSUMO"] ?></td>
+                            <td><?php echo $arraySelectEPP["PERSONA"] ?></td>
+                            <td><?php echo $arraySelectEPP["CANTIDAD"] ?></td>
                         </tr>
                     <?php
                     }
@@ -432,13 +484,21 @@ if (!isset($_REQUEST["contrasena"])) {
                                 echo $arraySelectInsumos["CANTIDAD"];
                                 ?></td>
                             <td>
-                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionBolsas')">
+                                <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>')">
                                     <i class="fas fa-sign-in-alt"></i>
                                     <p>
                                         Entrada
                                     </p>
                                 </div>
-                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionBolsas')">
+                                <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>',null,<?php if ($arraySelectInsumos['TIPO'] == 'HERRAMIENTAS' || $arraySelectInsumos['TIPO'] == 'TOALLAS') {
+                                                                                                                                                                                                                            echo 'true';
+                                                                                                                                                                                                                        } else {
+                                                                                                                                                                                                                            echo 'false';
+                                                                                                                                                                                                                        } ?>, <?php if ($arraySelectInsumos['TIPO'] == 'EPP') {
+                                                                                                                                                                                                                                    echo 'true';
+                                                                                                                                                                                                                                } else {
+                                                                                                                                                                                                                                    echo 'false';
+                                                                                                                                                                                                                                } ?>)">
                                     <i class=" fas fa-sign-out-alt"></i>
                                     <p>
                                         Salida
@@ -481,13 +541,15 @@ if (!isset($_REQUEST["contrasena"])) {
                 $('#seccionHerramientas').hide();
                 $('#seccionInsumos').hide();
                 $('#seccionEPP').hide();
-                var table = $('#tablaTotal').DataTable();
-                var text = document.getElementById("inputBusqueda").value;
                 $('#seccionTotal').show(400, "swing");
+
+                var text = document.getElementById("inputBusqueda").value;
+                var table = $('#tablaTotal').DataTable();
                 table.search(text).draw();
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $('#seccionTotal').offset().top
                 }, 1200);
+
             }
 
             var spanishTable = { // Variable que almacena la traduccion a español de la tabla
@@ -533,7 +595,7 @@ if (!isset($_REQUEST["contrasena"])) {
                 });
             }
 
-            function salida(idInsumo, nombreInsumo, seccionInsumo, mostrarServicio) {
+            function salida(idInsumo, nombreInsumo, seccionInsumo, mostrarServicio, mostrarPersona) {
                 nombreInsumo = nombreInsumo.toLowerCase();
                 if (mostrarServicio) {
                     Swal.fire({
@@ -550,18 +612,33 @@ if (!isset($_REQUEST["contrasena"])) {
                             '   </div>' +
                             '   <div class=\'col-12 form-group\'>' +
                             '       <label for=\'servicio\'>Servicio</label>' +
-                            '       <select class=\'form-control\' id=\'servicio\' required>' +
-                            '           <option value=\'1\'>Servicio 1</option>' +
-                            '           <option value=\'2\'>Servicio 2</option>' +
-                            '           <option value=\'3\'>Servicio 3</option>' +
-                            '           <option value=\'4\'>Servicio 4</option>' +
-                            '           <option value=\'5\'>Servicio 5</option>' +
-                            '       </select>' +
+                            '       <input type=\'text\' id=\'servicio\' class=\'form-control\'>' +
                             '   </div>' +
                             '   <div class=\'col-12\'>' +
                             '       <input type=\'submit\' value=\'Continuar\' class=\'btn btn-primary\'>' +
                             '   </div>' +
                             '</div>' +
+                            '</form>',
+                        showConfirmButton: false,
+                        showCloseButton: true
+                    });
+                } else if (mostrarPersona) {
+                    Swal.fire({
+                        title: 'Salida de insumo',
+                        html: '<form onsubmit=\'confirmarSalida(' + idInsumo + ",\"" + nombreInsumo + "\",\"" + seccionInsumo + '\")' + '\'>' +
+                            '<div class=\'form-group\'>' +
+                            '<label for=\'cantidadSalida\'>Cantidad</label>' +
+                            '<input type=\'number\' class=\'form-control\' id=\'cantidadSalida\' min=\'1\' max=\'999999\' required>' +
+                            '</div>' +
+                            '<div class=\'form-group\'>' +
+                            '<label for=\'justificacion\'>Justificación</label>' +
+                            '<input type=\'text\' id=\'justificacion\' class=\'form-control\' required>' +
+                            '</div>' +
+                            '<div class=\'form-group\'>' +
+                            '<label for=\'justificacion\'>Persona a quien se entrega:</label>' +
+                            '<input type=\'text\' id=\'persona\' class=\'form-control\' required>' +
+                            '</div>' +
+                            '<input type=\'submit\' value=\'Continuar\' class=\'btn btn-primary\'>' +
                             '</form>',
                         showConfirmButton: false,
                         showCloseButton: true
@@ -588,6 +665,7 @@ if (!isset($_REQUEST["contrasena"])) {
 
             function confirmarEntrada(idInsumo, nombreInsumo, seccionInsumo) {
                 var cantidadEntrada = parseInt(document.getElementById("cantidadEntrada").value);
+                var busqueda = document.getElementById("inputBusqueda").value;
                 Swal.fire({
                     title: '¿Quieres registrar una entrada de ' + cantidadEntrada + ' "' + nombreInsumo + '"?',
                     icon: 'warning',
@@ -601,7 +679,7 @@ if (!isset($_REQUEST["contrasena"])) {
                         <?php
                         $idCentro = $_SESSION["idCentro"];
                         ?>
-                        window.location.href = "../controller/controller.php?entradaInsumo=true&idInsumo=" + idInsumo + "&cantidadEntrada=" + cantidadEntrada + "&seccionInsumo=" + seccionInsumo + "&idCentro=<?php echo $idCentro ?>";
+                        window.location.href = "../controller/controller.php?entradaInsumo=true&idInsumo=" + idInsumo + "&cantidadEntrada=" + cantidadEntrada + "&seccionInsumo=" + seccionInsumo + "&idCentro=<?php echo $idCentro ?>" + "&busqueda=" + busqueda;
                     }
                 })
             }
@@ -609,6 +687,7 @@ if (!isset($_REQUEST["contrasena"])) {
             function confirmarSalida(idInsumo, nombreInsumo, seccionInsumo) {
                 var cantidadSalida = parseInt(document.getElementById("cantidadSalida").value);
                 var justificacion = document.getElementById("justificacion").value;
+                var busqueda = document.getElementById("inputBusqueda").value;
 
                 if (isInPage(document.getElementById("servicio"))) {
                     var servicio = (document.getElementById("servicio")).value;
@@ -622,7 +701,22 @@ if (!isset($_REQUEST["contrasena"])) {
                         cancelButtonText: "No, cancelar"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "../controller/controller.php?salidaInsumo=true&idInsumo=" + idInsumo + "&cantidadSalida=" + cantidadSalida + "&seccionInsumo=" + seccionInsumo + "&justificacion=" + justificacion + "&idCentro=<?php echo $idCentro ?>&servicio=" + servicio;
+                            window.location.href = "../controller/controller.php?salidaInsumo=true&idInsumo=" + idInsumo + "&cantidadSalida=" + cantidadSalida + "&seccionInsumo=" + seccionInsumo + "&justificacion=" + justificacion + "&idCentro=<?php echo $idCentro ?>&servicio=" + servicio + "&busqueda=" + busqueda;
+                        }
+                    })
+                } else if (isInPage(document.getElementById("persona"))) {
+                    var persona = (document.getElementById("persona")).value;
+                    Swal.fire({
+                        title: '¿Quieres registrar una salida de ' + cantidadSalida + ' "' + nombreInsumo + '" a la persona ' + persona + "?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#007bff',
+                        cancelButtonColor: '#dc3545',
+                        confirmButtonText: 'Si, registrar',
+                        cancelButtonText: "No, cancelar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "../controller/controller.php?salidaInsumo=true&idInsumo=" + idInsumo + "&cantidadSalida=" + cantidadSalida + "&seccionInsumo=" + seccionInsumo + "&justificacion=" + justificacion + "&idCentro=<?php echo $idCentro ?>" + "&persona=" + persona + "&busqueda=" + busqueda;
                         }
                     })
                 } else {
@@ -636,14 +730,14 @@ if (!isset($_REQUEST["contrasena"])) {
                         cancelButtonText: "No, cancelar"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "../controller/controller.php?salidaInsumo=true&idInsumo=" + idInsumo + "&cantidadSalida=" + cantidadSalida + "&seccionInsumo=" + seccionInsumo + "&justificacion=" + justificacion + "&idCentro=<?php echo $idCentro ?>";
+                            window.location.href = "../controller/controller.php?salidaInsumo=true&idInsumo=" + idInsumo + "&cantidadSalida=" + cantidadSalida + "&seccionInsumo=" + seccionInsumo + "&justificacion=" + justificacion + "&idCentro=<?php echo $idCentro ?>" + "&busqueda=" + busqueda;
                         }
                     })
                 }
             }
 
             window.onload = function() {
-                $('.table').DataTable({
+                $('#tablaBolsas').DataTable({
                     language: spanishTable, //establece el idioma
                     colReorder: true,
                     responsive: true,
@@ -660,18 +754,142 @@ if (!isset($_REQUEST["contrasena"])) {
                             titleAttr: 'Imprimir',
                             className: 'boton boton-imprimir'
                         }
-                    ]
+                    ],
                 });
-
-                $('tablaBolsas').DataTable({
-                    columnDefs: [{
-                            responsivePriority: 3,
-                            targets: 3
+                $('#tablaToallas').DataTable({
+                    language: spanishTable, //establece el idioma
+                    colReorder: true,
+                    responsive: true,
+                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
+                            titleAttr: 'Exportar a Excel',
+                            className: 'boton boton-excel'
                         },
                         {
-                            responsivePriority: 4,
-                            targets: 4
+                            extend: 'print',
+                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
+                            titleAttr: 'Imprimir',
+                            className: 'boton boton-imprimir'
                         }
+                    ],
+                });
+                $('#tablaLiquidos').DataTable({
+                    language: spanishTable, //establece el idioma
+                    colReorder: true,
+                    responsive: true,
+                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
+                            titleAttr: 'Exportar a Excel',
+                            className: 'boton boton-excel'
+                        },
+                        {
+                            extend: 'print',
+                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
+                            titleAttr: 'Imprimir',
+                            className: 'boton boton-imprimir'
+                        }
+                    ],
+                });
+                $('#tablaCafeteria').DataTable({
+                    language: spanishTable, //establece el idioma
+                    colReorder: true,
+                    responsive: true,
+                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
+                            titleAttr: 'Exportar a Excel',
+                            className: 'boton boton-excel'
+                        },
+                        {
+                            extend: 'print',
+                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
+                            titleAttr: 'Imprimir',
+                            className: 'boton boton-imprimir'
+                        }
+                    ],
+                });
+                $('#tablaHerramientas').DataTable({
+                    language: spanishTable, //establece el idioma
+                    colReorder: true,
+                    responsive: true,
+                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
+                            titleAttr: 'Exportar a Excel',
+                            className: 'boton boton-excel'
+                        },
+                        {
+                            extend: 'print',
+                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
+                            titleAttr: 'Imprimir',
+                            className: 'boton boton-imprimir'
+                        }
+                    ],
+                });
+                $('#tablaInsumos').DataTable({
+                    language: spanishTable, //establece el idioma
+                    colReorder: true,
+                    responsive: true,
+                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
+                            titleAttr: 'Exportar a Excel',
+                            className: 'boton boton-excel'
+                        },
+                        {
+                            extend: 'print',
+                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
+                            titleAttr: 'Imprimir',
+                            className: 'boton boton-imprimir'
+                        }
+                    ],
+                });
+                $('#tablaEPP').DataTable({
+                    language: spanishTable, //establece el idioma
+                    colReorder: true,
+                    responsive: true,
+                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
+                            titleAttr: 'Exportar a Excel',
+                            className: 'boton boton-excel'
+                        },
+                        {
+                            extend: 'print',
+                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
+                            titleAttr: 'Imprimir',
+                            className: 'boton boton-imprimir'
+                        }
+                    ],
+                });
+                $('#tablaMovimientosEPP').DataTable({
+                    language: spanishTable, //establece el idioma
+                    colReorder: true,
+                    responsive: true,
+                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
+                            titleAttr: 'Exportar a Excel',
+                            className: 'boton boton-excel'
+                        },
+                        {
+                            extend: 'print',
+                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
+                            titleAttr: 'Imprimir',
+                            className: 'boton boton-imprimir'
+                        }
+                    ],
+                    "order": [
+                        [0, "desc"]
                     ]
                 });
 
@@ -683,9 +901,22 @@ if (!isset($_REQUEST["contrasena"])) {
                 $('#seccionInsumos').hide();
                 $('#seccionEPP').hide();
                 $('#seccionTotal').hide();
+                <?php
+                if (isset($_REQUEST["seccionInsumo"])) {
+                    $seccionInsumo = $_REQUEST["seccionInsumo"];
+                    echo "mostrar('#$seccionInsumo');";
+                }
+                if (isset($_REQUEST["busqueda"])) {
+                    $busqueda = $_REQUEST["busqueda"];
+                ?>
+                    var inputBusqueda = document.getElementById("inputBusqueda");
+                <?php
+                    echo "inputBusqueda.value = '" . $busqueda . "';";
+                    echo "buscar()";
+                }
+                ?>
             }
             //Data tables
-
             //Alertas con parametros PHP
             <?php
             if (isset($_REQUEST["ingresoExitoso"])) {
@@ -723,6 +954,7 @@ if (!isset($_REQUEST["contrasena"])) {
                 maxFontSize: '25px'
             });
         </script>
+        <?php require_once 'footer.php' ?>
     </div>
 </body>
 

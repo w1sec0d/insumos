@@ -1,11 +1,14 @@
 <?php
 require_once '../model/database.php';
+session_start();
 
 if (isset($_REQUEST["entradaInsumo"])) {
     $idInsumo = $_REQUEST["idInsumo"];
     $idCentro = $_REQUEST["idCentro"];
     $cantidadEntrada = $_REQUEST["cantidadEntrada"];
     $seccionInsumo = $_REQUEST["seccionInsumo"];
+    $busqueda = $_REQUEST["busqueda"];
+    $x = $_SESSION["x"];
 
     $queryEntrada = "CALL MODIFICAR_CANTIDAD('$idInsumo',$cantidadEntrada)";
     $resultadoQueryEntrada = mysqli_query($connection, $queryEntrada);
@@ -13,7 +16,11 @@ if (isset($_REQUEST["entradaInsumo"])) {
         $insertTransaccion = "INSERT INTO TRANSACCION(TIPO,CANTIDAD,FECHA,ID_CENTRO,ID_INSUMO) VALUES ('ENTRADA',$cantidadEntrada,NOW(),'$idCentro','$idInsumo')";
         $resultadoInsert = mysqli_query($connection, $insertTransaccion);
         if ($resultadoQueryEntrada) {
-            header("Location: ../view/insumos.php?ingresoExitoso=true#$seccionInsumo");
+            if (is_null($seccionInsumo)) {
+                header("Location: ../view/insumos.php?x=$x&ingresoExitoso=true&busqueda=$busqueda");
+            } else {
+                header("Location: ../view/insumos.php?x=$x&ingresoExitoso=true&seccionInsumo=$seccionInsumo");
+            }
         } else {
             echo $resultadoInsert;
         }
@@ -24,19 +31,33 @@ if (isset($_REQUEST["entradaInsumo"])) {
     $justificacion = $_REQUEST["justificacion"];
     $cantidadEntrada = $_REQUEST["cantidadSalida"];
     $seccionInsumo = $_REQUEST["seccionInsumo"];
+    $busqueda = $_REQUEST["busqueda"];
+    $x = $_SESSION["x"];
+
     $querySalida = "CALL MODIFICAR_CANTIDAD('$idInsumo',-$cantidadEntrada)";
     $resultadoQuerySalida = mysqli_query($connection, $querySalida);
 
     if ($resultadoQuerySalida) {
-        if (isset($_REQUEST["servicio"])) {
+        if (isset($_REQUEST["servicio"]) && isset($_REQUEST["persona"])) {
+            $persona = $_REQUEST["persona"];
+            $servicio = $_REQUEST["servicio"];
+            $insertTransaccion = "INSERT INTO TRANSACCION(TIPO,CANTIDAD,JUSTIFICACION,SERVICIO,PERSONA,FECHA,ID_CENTRO,ID_INSUMO) VALUES ('SALIDA',$cantidadEntrada,'$justificacion','$servicio','$persona',NOW(),'$idCentro','$idInsumo')";
+        } else if (isset($_REQUEST["servicio"]) && !isset($_REQUEST["persona"])) {
             $servicio = $_REQUEST["servicio"];
             $insertTransaccion = "INSERT INTO TRANSACCION(TIPO,CANTIDAD,JUSTIFICACION,SERVICIO,FECHA,ID_CENTRO,ID_INSUMO) VALUES ('SALIDA',$cantidadEntrada,'$justificacion','$servicio',NOW(),'$idCentro','$idInsumo')";
+        } else if (!isset($_REQUEST["servicio"]) && isset($_REQUEST["persona"])) {
+            $persona = $_REQUEST["persona"];
+            $insertTransaccion = "INSERT INTO TRANSACCION(TIPO,CANTIDAD,JUSTIFICACION,PERSONA,FECHA,ID_CENTRO,ID_INSUMO) VALUES ('SALIDA',$cantidadEntrada,'$justificacion','$persona',NOW(),'$idCentro','$idInsumo')";
         } else {
             $insertTransaccion = "INSERT INTO TRANSACCION(TIPO,CANTIDAD,JUSTIFICACION,FECHA,ID_CENTRO,ID_INSUMO) VALUES ('SALIDA',$cantidadEntrada,'$justificacion',NOW(),'$idCentro','$idInsumo')";
         }
         $resultadoInsert = mysqli_query($connection, $insertTransaccion);
         if ($resultadoInsert) {
-            header("Location: ../view/insumos.php?salidaExitosa=true#$seccionInsumo");
+            if (empty($seccionInsumo)) {
+                header("Location: ../view/insumos.php?x=$x&salidaExitosa=true&busqueda=$busqueda");
+            } else {
+                header("Location: ../view/insumos.php?x=$x&salidaExitosa=true&seccionInsumo=$seccionInsumo");
+            }
         }
     } else {
         echo $querySalida;
