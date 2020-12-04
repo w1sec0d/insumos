@@ -8,7 +8,6 @@ if (isset($_REQUEST["entradaInsumo"])) {
     $cantidadEntrada = $_REQUEST["cantidadEntrada"];
     $seccionInsumo = $_REQUEST["seccionInsumo"];
     $busqueda = $_REQUEST["busqueda"];
-    $x = $_SESSION["x"];
 
     $queryEntrada = "CALL MODIFICAR_CANTIDAD('$idInsumo',$cantidadEntrada)";
     $resultadoQueryEntrada = mysqli_query($connection, $queryEntrada);
@@ -17,9 +16,9 @@ if (isset($_REQUEST["entradaInsumo"])) {
         $resultadoInsert = mysqli_query($connection, $insertTransaccion);
         if ($resultadoQueryEntrada) {
             if (is_null($seccionInsumo)) {
-                header("Location: ../view/insumos.php?x=$x&ingresoExitoso=true&busqueda=$busqueda");
+                header("Location: ../view/insumos.php?ingresoExitoso=true&busqueda=$busqueda");
             } else {
-                header("Location: ../view/insumos.php?x=$x&ingresoExitoso=true&seccionInsumo=$seccionInsumo");
+                header("Location: ../view/insumos.php?ingresoExitoso=true&seccionInsumo=$seccionInsumo");
             }
         } else {
             echo $resultadoInsert;
@@ -32,7 +31,6 @@ if (isset($_REQUEST["entradaInsumo"])) {
     $cantidadEntrada = $_REQUEST["cantidadSalida"];
     $seccionInsumo = $_REQUEST["seccionInsumo"];
     $busqueda = $_REQUEST["busqueda"];
-    $x = $_SESSION["x"];
 
     $querySalida = "CALL MODIFICAR_CANTIDAD('$idInsumo',-$cantidadEntrada)";
     $resultadoQuerySalida = mysqli_query($connection, $querySalida);
@@ -54,12 +52,16 @@ if (isset($_REQUEST["entradaInsumo"])) {
         $resultadoInsert = mysqli_query($connection, $insertTransaccion);
         if ($resultadoInsert) {
             if (empty($seccionInsumo)) {
-                header("Location: ../view/insumos.php?x=$x&salidaExitosa=true&busqueda=$busqueda");
+                header("Location: ../view/insumos.php?salidaExitosa=true&busqueda=$busqueda");
             } else {
-                header("Location: ../view/insumos.php?x=$x&salidaExitosa=true&seccionInsumo=$seccionInsumo");
+                header("Location: ../view/insumos.php?salidaExitosa=true&seccionInsumo=$seccionInsumo");
             }
         }
     } else {
         echo $querySalida;
     }
+} else if (isset($_REQUEST["cerrarSesion"])) {
+    session_destroy();
+    session_abort();
+    header("Location:../index.php?sesionCerrada=true");
 }

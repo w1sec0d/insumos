@@ -88,6 +88,18 @@ td p {
     background: rgb(218, 218, 25);
 }
 
+.color-verde {
+    background: rgb(54, 197, 41);
+}
+
+.color-blanco {
+    background: rgb(255, 255, 255);
+}
+
+.color-gris {
+    background: rgb(146, 146, 136);
+}
+
 .hidden {
     display: none;
 }

@@ -2,37 +2,46 @@
 session_start();
 require_once '../model/database.php';
 
-if (isset($_REQUEST["x"])) {
-    switch ($_REQUEST["x"]) {
+if (isset($_REQUEST["password"])) {
+    $_SESSION['tiempo'] = time();
+    switch ($_REQUEST["password"]) {
         case 'tGLEIz4mzDpa':
             $_SESSION["idCentro"] = 1;
             $_SESSION["nombreCentro"] = "HOSPITAL SIMON BOLIVAR";
-            $_SESSION["x"] = "tGLEIz4mzDpa";
+            $_SESSION["password"] = $_REQUEST["password"];
             break;
         case 'xXS2owJKOT17':
             $_SESSION["idCentro"] = 2;
             $_SESSION["nombreCentro"] = "HOSPITAL TUNAL";
-            $_SESSION["x"] = "xXS2owJKOT17";
+            $_SESSION["password"] = $_REQUEST["password"];
             break;
         case 'A3wpJD4qfDvc':
             $_SESSION["idCentro"] = 3;
             $_SESSION["nombreCentro"] = "HOSPITAL SANTA CLARA";
-            $_SESSION["x"] = "A3wpJD4qfDvc";
+            $_SESSION["password"] = $_REQUEST["password"];
             break;
         case 'CualZwMtQjbx':
             $_SESSION["idCentro"] = 4;
             $_SESSION["nombreCentro"] = "HOSPITAL KENNEDY";
-            $_SESSION["x"] = "CualZwMtQjbx";
+            $_SESSION["password"] = $_REQUEST["password"];
             break;
         case 'GCcJAWBN0irc':
             header("Location: ./admin.php");
-            $_SESSION["x"] = "GCcJAWBN0irc";
             $_SESSION["admin"] = true;
+            $_SESSION["password"] = $_REQUEST["password"];
             break;
 
         default:
             header("Location: ../index.php?error=true");
             break;
+    }
+} else if (isset($_SESSION["password"])) {
+    if (time() - $_SESSION['tiempo'] > 600) {
+        session_destroy();
+        header("Location: ../index.php?sesionCaducada=true");
+        die();
+    } else {
+        $_SESSION['tiempo'] = time();
     }
 } else {
     header("Location: ../index.php?error=true");
@@ -40,7 +49,7 @@ if (isset($_REQUEST["x"])) {
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -71,10 +80,8 @@ if (isset($_REQUEST["x"])) {
 
 <body>
 
+    <?php require_once 'navbar.php'; ?>
     <div class="container-fluid">
-        <div class="row">
-            <?php require_once 'navbar.php'; ?>
-        </div>
         <div class="row align-items-center justify-content-center" id="cabecera">
             <div class="col-12 align-items-center justify-content-center">
                 <h1 id="titulo-pagina">Inventario de Insumos</h1>
@@ -115,7 +122,6 @@ if (isset($_REQUEST["x"])) {
                     <tr>
                         <th>Nombre</th>
                         <th>Color</th>
-                        <th>Dimensiones</th>
                         <th>Cantidad</th>
                         <th>Acciones</th>
                     </tr>
@@ -137,7 +143,6 @@ if (isset($_REQUEST["x"])) {
                                 echo "<p>" . $color . "</p> <div class='color color-$colorMinuscula'></div>"
                                 ?>
                             </td>
-                            <td><?php echo $arraySelectInsumos["DIMENSIONES"] ?></td>
                             <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
                             <td>
                                 <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionBolsas')">
@@ -152,6 +157,14 @@ if (isset($_REQUEST["x"])) {
                                         Salida
                                     </p>
                                 </div>
+                                <a href="movimientos.php?idInsumo=<?php echo $arraySelectInsumos['ID'] ?>">
+                                    <div class="btn btn-dark boton align-items-center justify-content-center">
+                                        <i class=" fas fa-eye"></i>
+                                        <p>
+                                            Ver movimientos
+                                        </p>
+                                    </div>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -195,6 +208,14 @@ if (isset($_REQUEST["x"])) {
                                         Salida
                                     </p>
                                 </div>
+                                <a href="movimientos.php?idInsumo=<?php echo $arraySelectInsumos['ID'] ?>">
+                                    <div class="btn btn-dark boton align-items-center justify-content-center">
+                                        <i class=" fas fa-eye"></i>
+                                        <p>
+                                            Ver movimientos
+                                        </p>
+                                    </div>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -237,6 +258,14 @@ if (isset($_REQUEST["x"])) {
                                         Salida
                                     </p>
                                 </div>
+                                <a href="movimientos.php?idInsumo=<?php echo $arraySelectInsumos['ID'] ?>">
+                                    <div class="btn btn-dark boton align-items-center justify-content-center">
+                                        <i class=" fas fa-eye"></i>
+                                        <p>
+                                            Ver movimientos
+                                        </p>
+                                    </div>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -279,6 +308,14 @@ if (isset($_REQUEST["x"])) {
                                         Salida
                                     </p>
                                 </div>
+                                <a href="movimientos.php?idInsumo=<?php echo $arraySelectInsumos['ID'] ?>">
+                                    <div class="btn btn-dark boton align-items-center justify-content-center">
+                                        <i class=" fas fa-eye"></i>
+                                        <p>
+                                            Ver movimientos
+                                        </p>
+                                    </div>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -321,6 +358,14 @@ if (isset($_REQUEST["x"])) {
                                         Salida
                                     </p>
                                 </div>
+                                <a href="movimientos.php?idInsumo=<?php echo $arraySelectInsumos['ID'] ?>">
+                                    <div class="btn btn-dark boton align-items-center justify-content-center">
+                                        <i class=" fas fa-eye"></i>
+                                        <p>
+                                            Ver movimientos
+                                        </p>
+                                    </div>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -363,6 +408,14 @@ if (isset($_REQUEST["x"])) {
                                         Salida
                                     </p>
                                 </div>
+                                <a href="movimientos.php?idInsumo=<?php echo $arraySelectInsumos['ID'] ?>">
+                                    <div class="btn btn-dark boton align-items-center justify-content-center">
+                                        <i class=" fas fa-eye"></i>
+                                        <p>
+                                            Ver movimientos
+                                        </p>
+                                    </div>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -405,6 +458,14 @@ if (isset($_REQUEST["x"])) {
                                         Salida
                                     </p>
                                 </div>
+                                <a href="movimientos.php?idInsumo=<?php echo $arraySelectInsumos['ID'] ?>">
+                                    <div class="btn btn-dark boton align-items-center justify-content-center">
+                                        <i class=" fas fa-eye"></i>
+                                        <p>
+                                            Ver movimientos
+                                        </p>
+                                    </div>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -424,7 +485,7 @@ if (isset($_REQUEST["x"])) {
                 </thead>
                 <tbody>
                     <?php
-                    $selectEPP = "SELECT * FROM VISTA_TRANSACCION WHERE TIPO_INSUMO='EPP' AND ID_CENTRO = '$idCentro';";
+                    $selectEPP = "SELECT * FROM VISTA_TRANSACCION WHERE TIPO_INSUMO='EPP' AND ID_CENTRO = '$idCentro' AND TIPO = 'SALIDA';";
                     $resultadoSelectEPP = mysqli_query($connection, $selectEPP);
 
                     while ($arraySelectEPP = mysqli_fetch_array($resultadoSelectEPP)) {
@@ -504,6 +565,14 @@ if (isset($_REQUEST["x"])) {
                                         Salida
                                     </p>
                                 </div>
+                                <a href="movimientos.php?idInsumo=<?php echo $arraySelectInsumos['ID'] ?>">
+                                    <div class="btn btn-dark boton align-items-center justify-content-center">
+                                        <i class=" fas fa-eye"></i>
+                                        <p>
+                                            Ver movimientos
+                                        </p>
+                                    </div>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -741,153 +810,49 @@ if (isset($_REQUEST["x"])) {
                     language: spanishTable, //establece el idioma
                     colReorder: true,
                     responsive: true,
-                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
-                    buttons: [{
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'boton boton-excel'
-                        },
-                        {
-                            extend: 'print',
-                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
-                            titleAttr: 'Imprimir',
-                            className: 'boton boton-imprimir'
-                        }
-                    ],
+                    dom: 'ftlp' // Establece los elementos a mostrar en la tabla
                 });
                 $('#tablaToallas').DataTable({
                     language: spanishTable, //establece el idioma
                     colReorder: true,
                     responsive: true,
-                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
-                    buttons: [{
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'boton boton-excel'
-                        },
-                        {
-                            extend: 'print',
-                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
-                            titleAttr: 'Imprimir',
-                            className: 'boton boton-imprimir'
-                        }
-                    ],
+                    dom: 'ftlp', // Establece los elementos a mostrar en la tabla
                 });
                 $('#tablaLiquidos').DataTable({
                     language: spanishTable, //establece el idioma
                     colReorder: true,
                     responsive: true,
-                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
-                    buttons: [{
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'boton boton-excel'
-                        },
-                        {
-                            extend: 'print',
-                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
-                            titleAttr: 'Imprimir',
-                            className: 'boton boton-imprimir'
-                        }
-                    ],
+                    dom: 'ftlp', // Establece los elementos a mostrar en la tabla
                 });
                 $('#tablaCafeteria').DataTable({
                     language: spanishTable, //establece el idioma
                     colReorder: true,
                     responsive: true,
-                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
-                    buttons: [{
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'boton boton-excel'
-                        },
-                        {
-                            extend: 'print',
-                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
-                            titleAttr: 'Imprimir',
-                            className: 'boton boton-imprimir'
-                        }
-                    ],
+                    dom: 'ftlp', // Establece los elementos a mostrar en la tabla
                 });
                 $('#tablaHerramientas').DataTable({
                     language: spanishTable, //establece el idioma
                     colReorder: true,
                     responsive: true,
-                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
-                    buttons: [{
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'boton boton-excel'
-                        },
-                        {
-                            extend: 'print',
-                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
-                            titleAttr: 'Imprimir',
-                            className: 'boton boton-imprimir'
-                        }
-                    ],
+                    dom: 'ftlp', // Establece los elementos a mostrar en la tabla
                 });
                 $('#tablaInsumos').DataTable({
                     language: spanishTable, //establece el idioma
                     colReorder: true,
                     responsive: true,
-                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
-                    buttons: [{
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'boton boton-excel'
-                        },
-                        {
-                            extend: 'print',
-                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
-                            titleAttr: 'Imprimir',
-                            className: 'boton boton-imprimir'
-                        }
-                    ],
+                    dom: 'ftlp', // Establece los elementos a mostrar en la tabla
                 });
                 $('#tablaEPP').DataTable({
                     language: spanishTable, //establece el idioma
                     colReorder: true,
                     responsive: true,
-                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
-                    buttons: [{
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'boton boton-excel'
-                        },
-                        {
-                            extend: 'print',
-                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
-                            titleAttr: 'Imprimir',
-                            className: 'boton boton-imprimir'
-                        }
-                    ],
+                    dom: 'ftlp', // Establece los elementos a mostrar en la tabla
                 });
                 $('#tablaMovimientosEPP').DataTable({
                     language: spanishTable, //establece el idioma
                     colReorder: true,
                     responsive: true,
-                    dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
-                    buttons: [{
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'boton boton-excel'
-                        },
-                        {
-                            extend: 'print',
-                            text: '<i class="fas fa-print fa-fw"></i> Imprimir',
-                            titleAttr: 'Imprimir',
-                            className: 'boton boton-imprimir'
-                        }
-                    ],
+                    dom: 'ftlp', // Establece los elementos a mostrar en la tabla
                     "order": [
                         [0, "desc"]
                     ]
@@ -954,8 +919,8 @@ if (isset($_REQUEST["x"])) {
                 maxFontSize: '25px'
             });
         </script>
-        <?php require_once 'footer.php' ?>
     </div>
+    <?php require_once 'footer.php' ?>
 </body>
 
 </html>

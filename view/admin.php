@@ -6,7 +6,7 @@ if (!$_SESSION["admin"]) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -64,7 +64,6 @@ if (!$_SESSION["admin"]) {
                 </thead>
                 <tbody>
                     <?php
-                    $idCentro = $_SESSION["idCentro"];
                     $selectInsumos = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = 1";
                     $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
 
@@ -105,7 +104,6 @@ if (!$_SESSION["admin"]) {
                 </thead>
                 <tbody>
                     <?php
-                    $idCentro = $_SESSION["idCentro"];
                     $selectInsumos = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = 2";
                     $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
 
@@ -146,7 +144,6 @@ if (!$_SESSION["admin"]) {
                 </thead>
                 <tbody>
                     <?php
-                    $idCentro = $_SESSION["idCentro"];
                     $selectInsumos = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = 3";
                     $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
 
@@ -187,7 +184,6 @@ if (!$_SESSION["admin"]) {
                 </thead>
                 <tbody>
                     <?php
-                    $idCentro = $_SESSION["idCentro"];
                     $selectInsumos = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = 4";
                     $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
 
