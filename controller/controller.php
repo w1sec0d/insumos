@@ -9,7 +9,7 @@ if (isset($_REQUEST["entradaInsumo"])) {
     $seccionInsumo = $_REQUEST["seccionInsumo"];
     $busqueda = $_REQUEST["busqueda"];
 
-    $queryEntrada = "CALL MODIFICAR_CANTIDAD('$idInsumo',$cantidadEntrada)";
+    $queryEntrada = "CALL MODIFICAR_CANTIDAD('$idInsumo','$idCentro',$cantidadEntrada)";
     $resultadoQueryEntrada = mysqli_query($connection, $queryEntrada);
     if ($resultadoQueryEntrada) {
         $insertTransaccion = "INSERT INTO TRANSACCION(TIPO,CANTIDAD,FECHA,ID_CENTRO,ID_INSUMO) VALUES ('ENTRADA',$cantidadEntrada,NOW(),'$idCentro','$idInsumo')";
@@ -32,7 +32,7 @@ if (isset($_REQUEST["entradaInsumo"])) {
     $seccionInsumo = $_REQUEST["seccionInsumo"];
     $busqueda = $_REQUEST["busqueda"];
 
-    $querySalida = "CALL MODIFICAR_CANTIDAD('$idInsumo',-$cantidadEntrada)";
+    $querySalida = "CALL MODIFICAR_CANTIDAD('$idInsumo','$idCentro',-$cantidadEntrada)";
     $resultadoQuerySalida = mysqli_query($connection, $querySalida);
 
     if ($resultadoQuerySalida) {

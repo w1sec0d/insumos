@@ -5,27 +5,27 @@ require_once '../model/database.php';
 if (isset($_REQUEST["password"])) {
     $_SESSION['tiempo'] = time();
     switch ($_REQUEST["password"]) {
-        case 'tGLEIz4mzDpa':
+        case 'hsm6432':
             $_SESSION["idCentro"] = 1;
             $_SESSION["nombreCentro"] = "HOSPITAL SIMON BOLIVAR";
             $_SESSION["password"] = $_REQUEST["password"];
             break;
-        case 'xXS2owJKOT17':
+        case 'ht0287':
             $_SESSION["idCentro"] = 2;
             $_SESSION["nombreCentro"] = "HOSPITAL TUNAL";
             $_SESSION["password"] = $_REQUEST["password"];
             break;
-        case 'A3wpJD4qfDvc':
+        case 'hst3920':
             $_SESSION["idCentro"] = 3;
             $_SESSION["nombreCentro"] = "HOSPITAL SANTA CLARA";
             $_SESSION["password"] = $_REQUEST["password"];
             break;
-        case 'CualZwMtQjbx':
+        case 'hk9102':
             $_SESSION["idCentro"] = 4;
             $_SESSION["nombreCentro"] = "HOSPITAL KENNEDY";
             $_SESSION["password"] = $_REQUEST["password"];
             break;
-        case 'GCcJAWBN0irc':
+        case 'ad3810':
             header("Location: ./admin.php");
             $_SESSION["admin"] = true;
             $_SESSION["password"] = $_REQUEST["password"];
@@ -473,34 +473,6 @@ if (isset($_REQUEST["password"])) {
                     ?>
                 </tbody>
             </table>
-            <table class="table table-striped" id="tablaMovimientosEPP">
-                <h2 class="titulo-seccion w-100"><i class="fas fa-exchange-alt"></i> Movimientos EPP</h2>
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Insumo</th>
-                        <th>Persona</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $selectEPP = "SELECT * FROM VISTA_TRANSACCION WHERE TIPO_INSUMO='EPP' AND ID_CENTRO = '$idCentro' AND TIPO = 'SALIDA';";
-                    $resultadoSelectEPP = mysqli_query($connection, $selectEPP);
-
-                    while ($arraySelectEPP = mysqli_fetch_array($resultadoSelectEPP)) {
-                    ?>
-                        <tr>
-                            <td><?php echo $arraySelectEPP["FECHA"] ?></td>
-                            <td><?php echo $arraySelectEPP["NOMBRE_INSUMO"] ?></td>
-                            <td><?php echo $arraySelectEPP["PERSONA"] ?></td>
-                            <td><?php echo $arraySelectEPP["CANTIDAD"] ?></td>
-                        </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
         </div>
 
         <div class="row seccion align-items-center justify-content-center" id="seccionTotal" style="background: rgb(250, 250, 250);">
@@ -848,15 +820,6 @@ if (isset($_REQUEST["password"])) {
                     responsive: true,
                     dom: 'ftlp', // Establece los elementos a mostrar en la tabla
                 });
-                $('#tablaMovimientosEPP').DataTable({
-                    language: spanishTable, //establece el idioma
-                    colReorder: true,
-                    responsive: true,
-                    dom: 'ftlp', // Establece los elementos a mostrar en la tabla
-                    "order": [
-                        [0, "desc"]
-                    ]
-                });
 
                 $('#seccionBolsas').hide();
                 $('#seccionToallas').hide();
@@ -900,6 +863,26 @@ if (isset($_REQUEST["password"])) {
                     title: '¡Salida de insumo registrada!',
                     showCloseButton: true,
                     timer: 7000
+                });
+            <?php
+            }
+            if (isset($_REQUEST["password"])) {
+            ?>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Bienvenid@'
                 });
             <?php
             }

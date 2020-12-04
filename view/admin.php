@@ -37,181 +37,164 @@ if (!$_SESSION["admin"]) {
 </head>
 
 <body>
+    <?php require_once 'navbar.php'; ?>
     <div class="container-fluid">
-        <div class="row">
-            <?php require_once 'navbar.php'; ?>
-        </div>
         <div class="row align-items-center justify-content-center" id="cabecera">
             <div class="col-12 align-items-center justify-content-center">
                 <h1 class="text-center" id="titulo-centro"><i class="fas fa-user-shield"></i> Sección Administrador</h1>
                 <br>
             </div>
+            <div class="col-12 align-items-center justify-content-center">
+                <h3>Filtrar por hospital</h3>
+            </div>
+            <div class="col-12">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a onclick="mostrar('#seccionSimon')"><button type="button" class="btn btn-secondary" style="border-radius: 0.25rem 0 0 0.25rem;">H. Simón Bolívar</button></a>
+                    <a onclick="mostrar('#seccionTunal')"><button type="button" class="btn btn-secondary">H. Tunal</button></a>
+                    <a onclick="mostrar('#seccionSantaClara')"><button type="button" class="btn btn-secondary">H. Santa Clara</button></a>
+                    <a onclick="mostrar('#seccionKennedy')"><button type="button" class="btn btn-secondary" style="border-radius: 0 0.25rem 0.25rem 0;">H. Kennedy</button></a>
+                </div>
+                <br><br>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a onclick="mostrar('#seccionGeneral')"><button type="button" class="btn btn-secondary" style="border-radius: 0.25rem 0.25rem 0.25rem 0.25rem;">Inventario General</button></a>
+                </div>
+            </div>
         </div>
 
         <div class="row seccion align-items-center justify-content-center" id="" style="background: rgb(250, 250, 250);">
-            <table class="table table-striped" id="tablaSimon">
-                <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Simón Bolívar</h2>
-                <thead class="thead-dark">
-                    <tr>
-                        <th></th>
-                        <th>Fecha y hora</th>
-                        <th>Tipo</th>
-                        <th>Insumo</th>
-                        <th>Color</th>
-                        <th>Cantidad</th>
-                        <th>Justificacion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $selectInsumos = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = 1";
-                    $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
-
-                    while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
-                    ?>
-                        <tr class="<?php echo $arraySelectInsumos["TIPO"] ?>">
-                            <td><?php echo $arraySelectInsumos["TIPO"] ?></td>
-                            <td><?php echo $arraySelectInsumos["FECHA"] ?></td>
-                            <td><?php echo $arraySelectInsumos["TIPO_INSUMO"] ?></td>
-                            <td><?php echo $arraySelectInsumos["NOMBRE_INSUMO"] ?></td>
-                            <td class="justify-content-center align-items-center">
-                                <?php
-                                $color = $arraySelectInsumos["COLOR"];
-                                $colorMinuscula = strtolower($color);
-                                echo "<p>" . $color . "</p> <div class='color color-$colorMinuscula'></div>"
-                                ?>
-                            </td>
-                            <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
-                            <td><?php echo $arraySelectInsumos["JUSTIFICACION"] ?></td>
+            <div id="seccionSimon">
+                <table class="table table-striped" id="tablaSimon">
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> Inventario H. Simón Bolívar</h2>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
                         </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
-            <table class="table table-striped" id="tablaTunal">
-                <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Tunal</h2>
-                <thead class="thead-dark">
-                    <tr>
-                        <th></th>
-                        <th>Fecha y hora</th>
-                        <th>Tipo</th>
-                        <th>Insumo</th>
-                        <th>Color</th>
-                        <th>Cantidad</th>
-                        <th>Justificacion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $selectInsumos = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = 2";
-                    $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+                    </thead>
+                    <tbody>
+                        <?php
+                        $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE ID_CENTRO = 1";
+                        $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
 
-                    while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
-                    ?>
-                        <tr class="<?php echo $arraySelectInsumos["TIPO"] ?>">
-                            <td><?php echo $arraySelectInsumos["TIPO"] ?></td>
-                            <td><?php echo $arraySelectInsumos["FECHA"] ?></td>
-                            <td><?php echo $arraySelectInsumos["TIPO_INSUMO"] ?></td>
-                            <td><?php echo $arraySelectInsumos["NOMBRE_INSUMO"] ?></td>
-                            <td class="justify-content-center align-items-center">
-                                <?php
-                                $color = $arraySelectInsumos["COLOR"];
-                                $colorMinuscula = strtolower($color);
-                                echo "<p>" . $color . "</p> <div class='color color-$colorMinuscula'></div>"
-                                ?>
-                            </td>
-                            <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
-                            <td><?php echo $arraySelectInsumos["JUSTIFICACION"] ?></td>
+                        while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                        ?>
+                            <tr>
+                                <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div id="seccionTunal">
+                <table class="table table-striped" id="tablaTunal">
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Tunal</h2>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
                         </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
-            <table class="table table-striped" id="tablaSantaClara">
-                <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Santa Clara</h2>
-                <thead class="thead-dark">
-                    <tr>
-                        <th></th>
-                        <th>Fecha y hora</th>
-                        <th>Tipo</th>
-                        <th>Insumo</th>
-                        <th>Color</th>
-                        <th>Cantidad</th>
-                        <th>Justificacion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $selectInsumos = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = 3";
-                    $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+                    </thead>
+                    <tbody>
+                        <?php
+                        $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE ID_CENTRO = 2";
+                        $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
 
-                    while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
-                    ?>
-                        <tr class="<?php echo $arraySelectInsumos["TIPO"] ?>">
-                            <td><?php echo $arraySelectInsumos["TIPO"] ?></td>
-                            <td><?php echo $arraySelectInsumos["FECHA"] ?></td>
-                            <td><?php echo $arraySelectInsumos["TIPO_INSUMO"] ?></td>
-                            <td><?php echo $arraySelectInsumos["NOMBRE_INSUMO"] ?></td>
-                            <td class="justify-content-center align-items-center">
-                                <?php
-                                $color = $arraySelectInsumos["COLOR"];
-                                $colorMinuscula = strtolower($color);
-                                echo "<p>" . $color . "</p> <div class='color color-$colorMinuscula'></div>"
-                                ?>
-                            </td>
-                            <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
-                            <td><?php echo $arraySelectInsumos["JUSTIFICACION"] ?></td>
+                        while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                        ?>
+                            <tr>
+                                <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div id="seccionSantaClara">
+                <table class="table table-striped" id="tablaSantaClara">
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Santa Clara</h2>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
                         </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
-            <table class="table table-striped" id="tablaKennedy">
-                <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Kennedy</h2>
-                <thead class="thead-dark">
-                    <tr>
-                        <th></th>
-                        <th>Fecha y hora</th>
-                        <th>Tipo</th>
-                        <th>Insumo</th>
-                        <th>Color</th>
-                        <th>Cantidad</th>
-                        <th>Justificacion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $selectInsumos = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = 4";
-                    $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+                    </thead>
+                    <tbody>
+                        <?php
+                        $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE ID_CENTRO = 3";
+                        $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
 
-                    while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
-                    ?>
-                        <tr class="<?php echo $arraySelectInsumos["TIPO"] ?>">
-                            <td><?php echo $arraySelectInsumos["TIPO"] ?></td>
-                            <td><?php echo $arraySelectInsumos["FECHA"] ?></td>
-                            <td><?php echo $arraySelectInsumos["TIPO_INSUMO"] ?></td>
-                            <td><?php echo $arraySelectInsumos["NOMBRE_INSUMO"] ?></td>
-                            <td class="justify-content-center align-items-center">
-                                <?php
-                                $color = $arraySelectInsumos["COLOR"];
-                                $colorMinuscula = strtolower($color);
-                                echo "<p>" . $color . "</p> <div class='color color-$colorMinuscula'></div>"
-                                ?>
-                            </td>
-                            <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
-                            <td><?php echo $arraySelectInsumos["JUSTIFICACION"] ?></td>
+                        while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                        ?>
+                            <tr>
+                                <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div id="seccionKennedy">
+                <table class="table table-striped" id="tablaKennedy">
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Kennedy</h2>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
                         </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE ID_CENTRO = 4";
+                        $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+
+                        while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                        ?>
+                            <tr>
+                                <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div id="seccionGeneral">
+                <table class="table table-striped" id="tablaGeneral">
+                    <h2 class="titulo-seccion w-100">Inventario General</h2>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $selectInsumos = "SELECT * FROM VISTA_GENERAL_INSUMOS";
+                        $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+
+                        while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                        ?>
+                            <tr>
+                                <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <?php require_once 'footer.php' ?>
     </div>
+    <?php require_once 'footer.php' ?>
 </body>
 <script>
     var spanishTable = { // Variable que almacena la traduccion a español de la tabla
@@ -250,9 +233,6 @@ if (!$_SESSION["admin"]) {
         colReorder: true,
         responsive: true,
         dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
-        "order": [
-            [1, "desc"]
-        ],
         buttons: [{
                 extend: 'excelHtml5',
                 text: '<i class="fas fa-file-excel fa-fw"></i> Exportar Excel ',
@@ -277,6 +257,24 @@ if (!$_SESSION["admin"]) {
         minFontSize: '20px',
         maxFontSize: '30px'
     });
+    window.onload = function() {
+        $('#seccionSimon').hide();
+        $('#seccionTunal').hide();
+        $('#seccionSantaClara').hide();
+        $('#seccionKennedy').hide();
+    }
+
+    function mostrar(elemento) {
+        $('#seccionSimon').hide();
+        $('#seccionTunal').hide();
+        $('#seccionSantaClara').hide();
+        $('#seccionKennedy').hide();
+        $('#seccionGeneral').hide();
+        $(elemento).show();
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $(elemento).offset().top
+        }, 1200);
+    }
 </script>
 
 </html>

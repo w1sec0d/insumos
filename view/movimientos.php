@@ -78,22 +78,26 @@ if (isset($_SESSION["password"])) {
         <div class="container-fluid">
             <div class="row align-items-center justify-content-center" id="cabecera">
                 <div class="col-12 align-items-center justify-content-center">
-                    <h1 id="titulo-pagina">Movimiento de <?php echo strtolower($nombreInsumo) ?></h1>
+                    <h1 id="titulo-pagina">Movimiento de Insumos</h1>
                 </div>
                 <div class="col-12 align-items-center justify-content-center">
                     <h2 class="text-center" id="titulo-centro"><i class="fas fa-hospital"></i> <?php echo $_SESSION["nombreCentro"] ?></h2>
                     <br>
                 </div>
+                <a href="insumos.php">
+                    <button class="btn btn-primary boton">Volver a gestión de insumos</button>
+                </a>
             </div>
 
             <div class="row seccion align-items-center justify-content-center" id="seccionInsumo" style="background: rgb(250, 250, 250);">
                 <table class="table table-striped" id="tablaInsumo">
-                    <h2 class="titulo-seccion w-100">Movimientos <?php echo strtolower($nombreInsumo) ?></h2>
+                    <h2 class="titulo-seccion w-100">Movimientos del insumo <i>"<?php echo strtolower($nombreInsumo) ?>"</i></h2>
                     <thead class="thead-dark">
                         <tr>
                             <th>Tipo</th>
                             <th>Fecha</th>
                             <th>Cantidad</th>
+                            <th>Persona</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,6 +108,14 @@ if (isset($_SESSION["password"])) {
                                 <td><?php echo $array["TIPO"] ?></td>
                                 <td><?php echo $array["FECHA"] ?></td>
                                 <td><?php echo $array["CANTIDAD"] ?></td>
+                                <td>
+                                    <?php
+                                    if (isset($array["PERSONA"])) {
+                                        $persona = $array["PERSONA"];
+                                        echo "$persona";
+                                    }
+                                    ?>
+                                </td>
                             </tr>
                         <?php
                         }
