@@ -64,7 +64,7 @@ if (!$_SESSION["admin"]) {
         <div class="row seccion align-items-center justify-content-center" id="" style="background: rgb(250, 250, 250);">
             <div id="seccionSimon">
                 <table class="table table-striped" id="tablaSimon">
-                    <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> Inventario H. Simón Bolívar</h2>
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-dolly-flatbed"></i> Inventario H. Simón Bolívar</h2>
                     <thead class="thead-dark">
                         <tr>
                             <th>Insumo</th>
@@ -90,7 +90,7 @@ if (!$_SESSION["admin"]) {
             </div>
             <div id="seccionTunal">
                 <table class="table table-striped" id="tablaTunal">
-                    <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Tunal</h2>
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-dolly-flatbed"></i> Inventario H. Tunal</h2>
                     <thead class="thead-dark">
                         <tr>
                             <th>Insumo</th>
@@ -116,7 +116,7 @@ if (!$_SESSION["admin"]) {
             </div>
             <div id="seccionSantaClara">
                 <table class="table table-striped" id="tablaSantaClara">
-                    <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Santa Clara</h2>
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-dolly-flatbed"></i> Inventario H. Santa Clara</h2>
                     <thead class="thead-dark">
                         <tr>
                             <th>Insumo</th>
@@ -142,7 +142,7 @@ if (!$_SESSION["admin"]) {
             </div>
             <div id="seccionKennedy">
                 <table class="table table-striped" id="tablaKennedy">
-                    <h2 class="titulo-seccion w-100"><i class="fas fa-hospital"></i> H. Kennedy</h2>
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-dolly-flatbed"></i> Inventario H. Kennedy</h2>
                     <thead class="thead-dark">
                         <tr>
                             <th>Insumo</th>
@@ -168,7 +168,7 @@ if (!$_SESSION["admin"]) {
             </div>
             <div id="seccionGeneral">
                 <table class="table table-striped" id="tablaGeneral">
-                    <h2 class="titulo-seccion w-100">Inventario General</h2>
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-dolly-flatbed"></i> Inventario General</h2>
                     <thead class="thead-dark">
                         <tr>
                             <th>Insumo</th>

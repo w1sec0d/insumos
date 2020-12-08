@@ -15,7 +15,7 @@ if (isset($_REQUEST["entradaInsumo"])) {
         $insertTransaccion = "INSERT INTO TRANSACCION(TIPO,CANTIDAD,FECHA,ID_CENTRO,ID_INSUMO) VALUES ('ENTRADA',$cantidadEntrada,NOW(),'$idCentro','$idInsumo')";
         $resultadoInsert = mysqli_query($connection, $insertTransaccion);
         if ($resultadoQueryEntrada) {
-            if (is_null($seccionInsumo)) {
+            if (isset($seccionInsumo)) {
                 header("Location: ../view/insumos.php?ingresoExitoso=true&busqueda=$busqueda");
             } else {
                 header("Location: ../view/insumos.php?ingresoExitoso=true&seccionInsumo=$seccionInsumo");

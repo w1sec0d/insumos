@@ -5,27 +5,27 @@ require_once '../model/database.php';
 if (isset($_REQUEST["password"])) {
     $_SESSION['tiempo'] = time();
     switch ($_REQUEST["password"]) {
-        case 'hsm6432':
+        case 'hsm6432' or 'Hsm6432' or 'HSM6432':
             $_SESSION["idCentro"] = 1;
             $_SESSION["nombreCentro"] = "HOSPITAL SIMON BOLIVAR";
             $_SESSION["password"] = $_REQUEST["password"];
             break;
-        case 'ht0287':
+        case 'ht0287' or 'Ht0287' or 'HT0287':
             $_SESSION["idCentro"] = 2;
             $_SESSION["nombreCentro"] = "HOSPITAL TUNAL";
             $_SESSION["password"] = $_REQUEST["password"];
             break;
-        case 'hst3920':
+        case 'hst3920' or 'Hst3920' or 'HST3920':
             $_SESSION["idCentro"] = 3;
             $_SESSION["nombreCentro"] = "HOSPITAL SANTA CLARA";
             $_SESSION["password"] = $_REQUEST["password"];
             break;
-        case 'hk9102':
+        case 'hk9102' or 'Hk9102' or 'HK9102':
             $_SESSION["idCentro"] = 4;
             $_SESSION["nombreCentro"] = "HOSPITAL KENNEDY";
             $_SESSION["password"] = $_REQUEST["password"];
             break;
-        case 'ad3810':
+        case 'ad3810' or 'Ad3810' or 'AD3810':
             header("Location: ./admin.php");
             $_SESSION["admin"] = true;
             $_SESSION["password"] = $_REQUEST["password"];
