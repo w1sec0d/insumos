@@ -7,7 +7,6 @@ body {
     text-align: center;
     font-family: 'Lato', sans-serif;
     table-layout: fixed;
-    background-color: rgb(250, 250, 250);
 }
 
 h1,
@@ -112,19 +111,19 @@ td p {
     background: rgb(255, 209, 209)!important;
 }
 
-
-/*INSUMOS: IjMf[W8N0GOb7o9)**/
-
-#cabecera {
+.containerCabecera {
     background-image: url("../img/back.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    height: 90vh;
+    border-bottom: 1px dashed black;
 }
 
 .seccion {
     padding-top: 4vh;
     padding-bottom: 4vh;
+    background: rgb(250, 250, 250);
 }
 
 .titulo-seccion {
@@ -167,7 +166,6 @@ td p {
 #cabecera {
     padding-top: 5vh;
     padding-bottom: 5vh;
-    border-bottom: 1px dashed black;
 }
 
 #inputBusqueda {
@@ -177,6 +175,11 @@ td p {
 
 #botonBusqueda {
     vertical-align: initial;
+}
+
+footer p {
+    margin: 0;
+    padding: 20px;
 }
 
 @media (max-width: 575.98px) {

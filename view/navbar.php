@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="row navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">
         <img src="../assets/img/logo.jpeg" width="40" height="30" class="d-inline-block align-top" alt="">
         <b>JDR Asistenciamos E.U</b>

@@ -15,7 +15,7 @@ CREATE TABLE INSUMO (
     NOMBRE VARCHAR(50) NOT NULL,
     DIMENSIONES VARCHAR(30),
     COLOR VARCHAR(30),
-    TIPO SET('BOLSAS', 'LIQUIDOS', 'CAFETERIA', 'HERRAMIENTAS', 'INSUMOS_GENERALES', 'EPP', 'TOALLAS', 'OTROS') NOT NULL
+    TIPO SET('BOLSAS', 'LIQUIDOS', 'CAFETERIA', 'HERRAMIENTAS', 'INSUMOS_GENERALES', 'EPP', 'TOALLAS', 'PAPELERIA', 'ACTIVOS_FIJOS','OTROS') NOT NULL
 );
 
 CREATE TABLE USUARIOS (
@@ -242,11 +242,7 @@ CREATE TABLE INVENTARIO (
                     INSERT INTO INSUMO
                         (ID,NOMBRE,DIMENSIONES,COLOR,TIPO)
                     VALUES
-                        (43, 'TAPABOCAS', NULL, NULL, 'EPP');
-                    INSERT INTO INSUMO
-                        (ID,NOMBRE,DIMENSIONES,COLOR,TIPO)
-                    VALUES
-                        (44, 'TAPABOCAS 1860', NULL, NULL, 'EPP');
+                        (43, 'TAPABOCAS CONVENCIONAL', NULL, NULL, 'EPP');
                     INSERT INTO INSUMO
                         (ID,NOMBRE,DIMENSIONES,COLOR,TIPO)
                     VALUES
@@ -830,10 +826,6 @@ CREATE TABLE INVENTARIO (
                     INSERT INTO INVENTARIO
                         (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
                     VALUES
-                        (44, 44, 1, 0);
-                    INSERT INTO INVENTARIO
-                        (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
-                    VALUES
                         (45, 45, 1, 0);
                     INSERT INTO INVENTARIO
                         (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
@@ -1411,10 +1403,6 @@ CREATE TABLE INVENTARIO (
                         (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
                     VALUES
                         (189, 43, 2, 0);
-                    INSERT INTO INVENTARIO
-                        (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
-                    VALUES
-                        (190, 44, 2, 0);
                     INSERT INTO INVENTARIO
                         (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
                     VALUES
@@ -1998,10 +1986,6 @@ CREATE TABLE INVENTARIO (
                     INSERT INTO INVENTARIO
                         (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
                     VALUES
-                        (336, 44, 3, 0);
-                    INSERT INTO INVENTARIO
-                        (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
-                    VALUES
                         (337, 45, 3, 0);
                     INSERT INTO INVENTARIO
                         (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
@@ -2582,10 +2566,6 @@ CREATE TABLE INVENTARIO (
                     INSERT INTO INVENTARIO
                         (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
                     VALUES
-                        (482, 44, 4, 0);
-                    INSERT INTO INVENTARIO
-                        (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
-                    VALUES
                         (483, 45, 4, 0);
                     INSERT INTO INVENTARIO
                         (ID,ID_INSUMO,ID_CENTRO,CANTIDAD)
@@ -3007,23 +2987,6 @@ SELECT
     *
 FROM
     VISTA_INSUMOS;
-
-CREATE OR REPLACE VIEW VISTA_TRANSACCION AS
-    SELECT 
-        SUBCONSULTA.*, CENTRO.NOMBRE
-    FROM
-        (SELECT 
-            TRANSACCION.*,
-                INSUMO.NOMBRE AS 'NOMBRE_INSUMO',
-                INSUMO.COLOR,
-                INSUMO.TIPO AS 'TIPO_INSUMO'
-        FROM
-            TRANSACCION
-        INNER JOIN INSUMO
-        WHERE
-            TRANSACCION.ID_INSUMO = INSUMO.ID) AS SUBCONSULTA
-            INNER JOIN
-        CENTRO ON SUBCONSULTA.ID_CENTRO = CENTRO.ID;
         
 CREATE OR REPLACE VIEW VISTA_GENERAL_INSUMOS AS
 SELECT NOMBRE,sum(cantidad) AS CANTIDAD FROM VISTA_INSUMOS GROUP BY ID;
@@ -3032,11 +2995,645 @@ SELECT * FROM VISTA_GENERAL_INSUMOS;
 
                     -- PROCEDIMIENTOS
                     DELIMITER //
-                    CREATE PROCEDURE MODIFICAR_CANTIDAD(
-	IDINSUMO INT, IDCENTRO INT, CAMBIO INT
+                    CREATE PROCEDURE MODIFICAR_CANTIDAD(IDINSUMO INT, IDCENTRO INT, CAMBIO INT
 )
                     BEGIN
                         UPDATE INVENTARIO SET CANTIDAD = CANTIDAD + CAMBIO WHERE ID_INSUMO = IDINSUMO AND ID_CENTRO = IDCENTRO;
                     END
                     // 
 DELIMITER ;
+
+CREATE OR REPLACE VIEW VISTA_TRANSACCION AS
+                    SELECT
+                        SUBCONSULTA.*, CENTRO.NOMBRE
+                    FROM
+                        (SELECT
+                            TRANSACCION.ID,TRANSACCION.TIPO,TRANSACCION.CANTIDAD,TRANSACCION.JUSTIFICACION,TRANSACCION.SERVICIO,TRANSACCION.PERSONA,DATE_SUB(TRANSACCION.FECHA, INTERVAL 5 HOUR) as FECHA, TRANSACCION.ID_CENTRO, TRANSACCION.ID_INSUMO,
+                            INSUMO.NOMBRE AS 'NOMBRE_INSUMO',
+                            INSUMO.COLOR,
+                            INSUMO.TIPO AS 'TIPO_INSUMO'
+                        FROM
+                            TRANSACCION
+                            INNER JOIN INSUMO 
+                        WHERE
+            TRANSACCION.ID_INSUMO = INSUMO.ID) AS SUBCONSULTA
+                        INNER JOIN
+                        CENTRO ON SUBCONSULTA.ID_CENTRO = CENTRO.ID;
+                    SELECT
+                        *
+                    FROM
+                        VISTA_TRANSACCION;
+                        
+SELECT * from INVENTARIO;
+
+-- CODIGO 2021
+INSERT INTO `insumos`.`insumo` (`NOMBRE`, `COLOR`, `TIPO`) VALUES ('BOLSA AZUL PEQUENA', 'AZUL', 'BOLSAS');
+INSERT INTO `insumos`.`inventario` (`ID_INSUMO`, `ID_CENTRO`, `CANTIDAD`) VALUES ('147 ', '3', '0');
+ALTER TABLE INSUMO MODIFY COLUMN TIPO SET('BOLSAS', 'LIQUIDOS', 'CAFETERIA', 'HERRAMIENTAS', 'INSUMOS_GENERALES', 'EPP', 'TOALLAS', 'PAPELERIA', 'ACTIVOS_FIJOS','OTROS') NOT NULL;
+
+SELECT * FROM CENTRO;
+ALTER TABLE CENTRO ADD COLUMN ABREVIATURA VARCHAR(30);
+ALTER TABLE CENTRO ADD COLUMN PASS VARCHAR(30);
+UPDATE CENTRO SET ABREVIATURA = 'H. Simon Bolivar', PASS = 'hsm6432' WHERE ID = '1';
+UPDATE CENTRO SET ABREVIATURA = 'H. Tunal', PASS = 'ht0287' WHERE ID = '2';
+UPDATE CENTRO SET ABREVIATURA = 'H. Santa Clara', PASS = 'hst3920' WHERE ID = '3';
+UPDATE CENTRO SET ABREVIATURA = 'H. Kennedy', PASS = 'hk9102' WHERE ID = '4';
+
+DELIMITER //
+CREATE PROCEDURE CREAR_CENTRO(
+	IN NOMBRE_CENTRO, ABREVIACION, CONTRASENA
+)
+BEGIN 
+	INSERT INTO CENTRO(NOMBRE,ABREVIATURA,PASS) VALUES (NOMBRE_CENTRO,ABREVIACION,CONTRASENA);
+END 
+DELIMITER ;
+DELIMITER //
+
+DELIMITER //
+CREATE PROCEDURE INVENTARIO_CENTRO(
+	IN ID
+)
+BEGIN 
+	INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (1, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (2, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (3, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (4, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (5, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (6, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (7, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (8, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (9, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (ID0, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (11, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (12, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (13, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (14, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (15, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (16, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (17, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (18, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (19, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (20, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (21, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (22, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (23, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (24, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (25, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (26, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (27, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (28, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (29, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (30, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (31, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (32, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (33, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (34, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (35, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (36, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (37, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (38, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (39, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (40, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (41, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (42, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (43, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (45, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (46, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (47, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (48, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (49, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (50, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (51, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (52, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (53, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (54, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (55, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (56, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (57, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (58, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (59, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (60, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (61, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (62, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (63, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (64, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (65, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (66, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (67, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (68, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (69, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (70, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (71, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (72, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (73, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (74, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (75, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (76, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (77, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (78, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (79, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (80, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (81, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (82, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (83, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (84, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (85, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (86, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (87, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (88, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (89, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (90, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (91, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (92, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (93, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (94, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (95, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (96, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (97, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (98, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (99, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (100, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (101, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (102, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (103, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (104, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (105, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (106, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (107, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (108, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (109, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (110, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (111, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (112, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (113, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (114, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (115, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (116, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (117, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (118, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (119, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (120, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (121, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (122, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (123, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (124, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (125, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (126, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (127, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (128, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (129, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (130, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (131, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (132, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (133, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (134, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (135, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (136, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (137, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (138, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (139, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (140, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (141, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (142, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (143, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (144, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (145, ID, 0);
+                    INSERT INTO INVENTARIO
+                        (ID_INSUMO,ID_CENTRO,CANTIDAD)
+                    VALUES
+                        (146, ID, 0);
+END 
+DELIMITER ;
+DELIMITER //
