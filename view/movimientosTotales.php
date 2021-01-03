@@ -233,6 +233,10 @@ if (isset($_SESSION["password"])) {
             }
             ?>
 
+            $(document).ready(function() {
+                console.log("ready!");
+            });
+
             //FitText
             $("h1").fitText(1, {
                 minFontSize: '30px',

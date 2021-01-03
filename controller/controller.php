@@ -79,6 +79,39 @@ if (isset($_REQUEST["entradaInsumo"])) {
             echo $querySalida;
         }
     }
+} else if (isset($_REQUEST["crearHospital"])) {
+    $NOMBRE = $_REQUEST["NOMBRE"];
+    $ABREVIATURA = $_REQUEST["ABREVIATURA"];
+    $PASS = $_REQUEST["PASS"];
+
+    $queryHospital = "INSERT INTO CENTRO(NOMBRE,ABREVIATURA,PASS) VALUES ('$NOMBRE', '$ABREVIATURA', '$PASS')";
+    $resultadoHospital = mysqli_query($connection, $queryHospital);
+    if ($resultadoHospital) {
+        $queryID = "SELECT MAX(ID) AS ID FROM CENTRO";
+        $resultadoQueryID = mysqli_query($connection, $queryID);
+        $arrayID = mysqli_fetch_array($resultadoQueryID);
+
+        $ID = $arrayID["ID"];
+
+        $queryInventarioHospital = "CALL INVENTARIO_CENTRO($ID)";
+        $resultadoInventarioHospital = mysqli_query($connection, $queryInventarioHospital);
+        if ($resultadoInventarioHospital) {
+            header("Location: ../view/admin.php?hospitalCreado=true");
+        } else {
+            echo $queryInventarioHospital;
+        }
+    }
+} else if (isset($_REQUEST["editarHospital"])) {
+    $ID = $_REQUEST["editarHospital"];
+    $NOMBRE = $_REQUEST["NOMBRE"];
+    $ABREVIATURA = $_REQUEST["ABREVIATURA"];
+    $PASS = $_REQUEST["PASS"];
+
+    $queryUpdate = "UPDATE CENTRO SET NOMBRE = '$NOMBRE', ABREVIATURA = '$ABREVIATURA', PASS = '$PASS' WHERE ID = '$ID'";
+    $resultadoUpdate = mysqli_query($connection, $queryUpdate);
+    if ($resultadoUpdate) {
+        header("Location:../view/admin.php?hospitalEditado=true");
+    }
 } else if (isset($_REQUEST["cerrarSesion"])) {
     session_destroy();
     session_abort();

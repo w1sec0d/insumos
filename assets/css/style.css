@@ -44,6 +44,11 @@ table tbody tr:hover {
     background-color: rgba(187, 219, 155, 0.6)!important;
 }
 
+thead {
+    background: #212529;
+    color: white;
+}
+
 td p {
     display: inline-block;
     width: fit-content;
@@ -53,6 +58,11 @@ td p {
 .boton {
     color: white;
     font-weight: bold;
+}
+
+.boton a {
+    text-decoration: none;
+    color: white;
 }
 
 .boton-form {
@@ -157,6 +167,17 @@ td p {
 .boton-imprimir:hover {
     background: #c96310!important;
     border: #c96310!important;
+}
+
+.boton-crear {
+    background: #dc3545!important;
+    border: #dc3545!important;
+    color: white!important;
+}
+
+.boton-crear:hover {
+    background: #d65965!important;
+    border: #d65965!important;
 }
 
 .dataTables_length {
