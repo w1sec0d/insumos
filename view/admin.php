@@ -385,6 +385,13 @@ if (!$_SESSION["admin"]) {
                 language: "es",
                 width: '80%'
             });
+            <?php
+            if (isset($_REQUEST["crearCentro"]) or isset($_REQUEST["hospitalCreado"])) {
+            ?>
+                mostrar('#seccionHospitales');
+            <?php
+            }
+            ?>
         }
 
         function mostrar(elemento) {

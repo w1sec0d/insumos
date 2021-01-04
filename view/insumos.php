@@ -508,13 +508,13 @@ if (isset($_REQUEST["password"])) { // si se intena iniciar sesión
                         <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
                         <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
                         <td>
-                            <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionEPP')">
+                            <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionPapeleria')">
                                 <i class="fas fa-sign-in-alt"></i>
                                 <p>
                                     Entrada
                                 </p>
                             </div>
-                            <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionEPP',false,true)">
+                            <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionPapeleria',false,true)">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <p>
                                     Salida
@@ -558,13 +558,13 @@ if (isset($_REQUEST["password"])) { // si se intena iniciar sesión
                         <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
                         <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
                         <td>
-                            <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionEPP')">
+                            <div class="btn btn-primary boton align-items-center justify-content-center" onclick="entrada(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionActivosFijos')">
                                 <i class="fas fa-sign-in-alt"></i>
                                 <p>
                                     Entrada
                                 </p>
                             </div>
-                            <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionEPP',false,true)">
+                            <div class="btn btn-danger boton align-items-center justify-content-center" onclick="salida(<?php echo $arraySelectInsumos['ID'] ?>,'<?php echo $arraySelectInsumos['NOMBRE'] ?>','seccionActivosFijos',false,true)">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <p>
                                     Salida
