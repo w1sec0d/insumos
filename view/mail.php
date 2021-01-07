@@ -1,3 +1,10 @@
 <?php
-mail("hernandezhanna245@gmail.com@gmail.com", "Este correo es un correo enviado automáticamente con PHP", "Wenas noches, eso era todo.\n Le anexo un besito", "admin@insumosjdr.atwebpages.com");
-echo time();
+require_once '../model/database.php';
+$query = "SELECT * FROM VISTA_INSUMOS_ESCASOS";
+$resultado = mysqli_query($connection, $query);
+
+while ($array = mysqli_fetch_array($resultado)) {
+    $asunto = "Bajo inventario en " . $array["NOMBRE_CENTRO"] . " | " . $array["CANTIDAD"] . " " . $array["NOMBRE"];
+    $mensaje = "La cantidad mínima para el insumo '" . $array["NOMBRE"] . "' es de " . $array["CANTIDAD_MINIMA "] . ". Pero actualmente hay " . $array["CANTIDAD"] . " unidades";
+    mail("cadavid4003@gmail.com", $asunto, $mensaje, "admin@insumosjdr.atwebpages.com");
+}

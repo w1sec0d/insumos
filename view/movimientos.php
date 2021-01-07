@@ -26,7 +26,7 @@ if (isset($_SESSION["password"])) {
     <link rel="stylesheet" href="../assets/libraries/bootstrap.css">
     <script src="../assets/libraries/bootstrap.js"></script>
 
-    <script src="../assets/libraries/sweetAlert.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <link rel="stylesheet" href="../assets/libraries/datatables.css">
     <script src="../assets/libraries/datatables.js"></script>
@@ -40,7 +40,15 @@ if (isset($_SESSION["password"])) {
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lato&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> <!-- select 2-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> <!-- select 2-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+    <title>Gestión de insumos JDR</title>
 
     <style>
         .ENTRADA:hover {

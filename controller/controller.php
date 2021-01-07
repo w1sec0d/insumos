@@ -112,6 +112,15 @@ if (isset($_REQUEST["entradaInsumo"])) {
     if ($resultadoUpdate) {
         header("Location:../view/admin.php?hospitalEditado=true");
     }
+} else if (isset($_REQUEST["editarMinimoInsumo"])) {
+    $ID = $_REQUEST["editarMinimoInsumo"];
+    $CANTIDAD_MINIMA = $_REQUEST["minimo"];
+    $mostrarSeccion = $_REQUEST["mostrarSeccion"];
+    $queryUpdate = "UPDATE INVENTARIO SET CANTIDAD_MINIMA = $CANTIDAD_MINIMA WHERE ID = '$ID'";
+    $resultadoUpdate = mysqli_query($connection,$queryUpdate);
+    if($resultadoUpdate){
+        header("Location:../view/admin.php?cantidadMinimaEditada=true&mostrarSeccion=$mostrarSeccion");
+    }
 } else if (isset($_REQUEST["cerrarSesion"])) {
     session_destroy();
     session_abort();

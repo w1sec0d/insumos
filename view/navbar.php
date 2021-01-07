@@ -14,11 +14,6 @@
                 </button>
             </li>
             <li class="nav-item">
-                <button class="nav-link btn btn-light" style="font-weight:bold; margin-right:5px" onclick="mostrar('#seccionHospitales')">
-                    <i class="fas fa-dolly"></i> Gestión de Insumos
-                </button>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link btn btn-primary" href="../controller/controller.php?cerrarSesion=true" style="color: white; font-weight:bold">
                     <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Cerrar sesión
                 </a>

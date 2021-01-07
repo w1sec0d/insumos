@@ -16,12 +16,10 @@ if (!$_SESSION["admin"]) {
     <link rel="stylesheet" href="../assets/libraries/bootstrap.css">
     <script src="../assets/libraries/bootstrap.js"></script>
 
-    <script src="../assets/libraries/sweetAlert.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <link rel="stylesheet" href="../assets/libraries/datatables.css">
     <script src="../assets/libraries/datatables.js"></script>
-
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
     <!-- Carga FontAwesome-->
     <script src="https://kit.fontawesome.com/482fb72b25.js" crossorigin="anonymous"></script>
@@ -32,6 +30,9 @@ if (!$_SESSION["admin"]) {
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lato&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> <!-- select 2-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> <!-- select 2-->
@@ -39,6 +40,7 @@ if (!$_SESSION["admin"]) {
 
     <title>Gestión de insumos JDR</title>
 </head>
+
 
 <body class="container-fluid">
     <?php require_once 'navbar.php'; ?>
@@ -79,12 +81,43 @@ if (!$_SESSION["admin"]) {
         while ($arrayCentros = mysqli_fetch_array($resultadoCentros)) {
         ?>
             <div id="seccion<?php echo $arrayCentros["ID"] ?>">
+                <table class="table table1 table-striped" id="tablaEscasos<?php echo $arrayCentros["ID"] ?>">
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-exclamation-triangle"></i> Insumos Escasos <?php echo $arrayCentros["ABREVIATURA"] ?></h2>
+                    <thead>
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad Mínima</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $idCentro = $arrayCentros["ID"];
+                        $selectInsumos = "SELECT * FROM VISTA_INSUMOS_ESCASOS WHERE ID_CENTRO = '$idCentro'";
+                        $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+
+                        while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                        ?>
+                            <tr class="<?php if ($arraySelectInsumos["CANTIDAD"] < $arraySelectInsumos["CANTIDAD_MINIMA"]) {
+                                            echo "insumoEscaso";
+                                        } ?>">
+                                <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD_MINIMA"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
                 <table class="table table1 table-striped" id="tabla<?php echo $arrayCentros["ID"] ?>">
                     <h2 class="titulo-seccion w-100"><i class="fas fa-dolly-flatbed"></i> Inventario <?php echo $arrayCentros["ABREVIATURA"] ?></h2>
                     <thead>
                         <tr>
                             <th>Insumo</th>
+                            <th>Cantidad Mínima</th>
                             <th>Cantidad</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,9 +128,19 @@ if (!$_SESSION["admin"]) {
 
                         while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
                         ?>
-                            <tr>
+                            <tr class="<?php if ($arraySelectInsumos["CANTIDAD"] < $arraySelectInsumos["CANTIDAD_MINIMA"]) {
+                                            echo "insumoEscaso";
+                                        } ?>">
                                 <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD_MINIMA"] ?></td>
                                 <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                                <td>
+                                    <a href="admin.php?editarMinimoInsumo=<?php echo $arraySelectInsumos["ID_INVENTARIO"] ?>&nombreInsumo=<?php echo $arraySelectInsumos["NOMBRE"] ?>&mostrarSeccion=<?php echo $arraySelectInsumos["ID_CENTRO"] ?>&cantidadInsumo=<?php echo $arraySelectInsumos["CANTIDAD"] ?>" class="btn btn-primary" style="border-radius:5px">
+                                        <span style="color: White;">
+                                            <i class="fas fa-edit fa-fw"></i> Editar Mínimo
+                                        </span>
+                                    </a>
+                                </td>
                             </tr>
                         <?php
                         }
@@ -110,7 +153,7 @@ if (!$_SESSION["admin"]) {
                 $resultadoQueryInsumo = mysqli_query($connection, $queryNombreInsumo);
                 ?>
                 <table class="table table2 table-striped" id="tablaTransacciones<?php echo $arrayCentros["ID"] ?>">
-                    <h2 class="titulo-seccion w-100" style="margin-top: 40px;"><b><i class="fas fa-exchange-alt"></i> Movimientos de insumos</b></h2>
+                    <h2 class="titulo-seccion w-100" style="margin-top: 40px;"><b><i class="fas fa-exchange-alt"></i> Movimientos de insumos <?php echo $arrayCentros["ABREVIATURA"] ?></b></h2>
                     <thead class="thead-dark">
                         <tr>
                             <th>Tipo movimiento</th>
@@ -150,6 +193,36 @@ if (!$_SESSION["admin"]) {
         }
         ?>
         <div id="seccionGeneral">
+            <table class="table table1 table-striped" id="tablaEscasosGeneral">
+                <h2 class="titulo-seccion w-100"><i class="fas fa-exclamation-triangle"></i> Insumos Escasos </h2>
+                <thead>
+                    <tr>
+                        <th>Centro</th>
+                        <th>Insumo</th>
+                        <th>Cantidad</th>
+                        <th>Cantidad Mínima</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $selectInsumos = "SELECT * FROM VISTA_INSUMOS_ESCASOS";
+                    $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+
+                    while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                    ?>
+                        <tr class="<?php if ($arraySelectInsumos["CANTIDAD"] < $arraySelectInsumos["CANTIDAD_MINIMA"]) {
+                                        echo "insumoEscaso";
+                                    } ?>">
+                            <td><?php echo $arraySelectInsumos["NOMBRE_CENTRO"] ?></td>
+                            <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                            <td><?php echo $arraySelectInsumos["CANTIDAD_MINIMA"] ?></td>
+                            <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
             <table class="table table1 table-striped" id="tablaInventarioGeneral">
                 <h2 class="titulo-seccion w-100"><i class="fas fa-dolly-flatbed"></i> Inventario General</h2>
                 <thead class="thead-dark">
@@ -388,13 +461,17 @@ if (!$_SESSION["admin"]) {
             <?php
             if (isset($_REQUEST["crearCentro"]) or isset($_REQUEST["hospitalCreado"])) {
             ?>
-                mostrar('#seccionHospitales');
+                mostrar('#seccionHospitales', false);
+            <?php
+            } else if (isset($_REQUEST["mostrarSeccion"])) {
+            ?>
+                mostrar('#seccion<?php echo $_REQUEST["mostrarSeccion"] ?>', false)
             <?php
             }
             ?>
         }
 
-        function mostrar(elemento) {
+        function mostrar(elemento, animacion = true) {
             <?php
             $queryCentros = "SELECT * FROM CENTRO";
             $resultadoCentros = mysqli_query($connection, $queryCentros);
@@ -407,9 +484,11 @@ if (!$_SESSION["admin"]) {
             $('#seccionGeneral').hide();
             $('#seccionHospitales').hide();
             $(elemento).show();
-            $([document.documentElement, document.body]).animate({
-                scrollTop: $(elemento).offset().top
-            }, 1200);
+            if (animacion) {
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $(elemento).offset().top
+                }, 1200);
+            }
         }
 
         function filtroHospital() {
@@ -489,6 +568,28 @@ if (!$_SESSION["admin"]) {
                     '</form>'
             });
         <?php
+        } else if (isset($_REQUEST["editarMinimoInsumo"])) {
+        ?>
+            Swal.fire({
+                width: '60%',
+                title: 'Editar cantidad mínima insumo "<?php echo $_REQUEST["nombreInsumo"] ?>"',
+                showCloseButton: true,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                html: '<form action=\'../controller/controller.php?editarMinimoInsumo=<?php echo $_REQUEST["editarMinimoInsumo"] ?>\' method=\'POST\'>' +
+                    '<div class=\'row\'>' +
+                    '   <div class=\'col-12 form-group\'>' +
+                    '       <label for=\'minimo\'>Cantidad Mínima</label>' +
+                    '       <input type=\'number\' name=\'minimo\' min="0" class=\'form-control\' value="<?php echo $_REQUEST["cantidadInsumo"] ?>" required>' +
+                    '       <input type=\'number\' name=\'mostrarSeccion\' class=\'form-control\' value="<?php echo $_REQUEST["mostrarSeccion"] ?>" style=\'display:none;\'>' +
+                    '   </div>' +
+                    '   <div class=\'col-12 form-group\'>' +
+                    '       <input type=\'submit\' name=\'Continuar\' class=\'btn btn-primary btn-lg\' value=\'Continuar\'>' +
+                    '   </div>' +
+                    '</div>' +
+                    '</form>'
+            });
+        <?php
         } else if (isset($_REQUEST["hospitalEditado"])) {
         ?>
             Swal.fire({
@@ -504,6 +605,16 @@ if (!$_SESSION["admin"]) {
             Swal.fire({
                 icon: 'success',
                 title: 'Hospital creado correctamente',
+                timer: 10000,
+                showCloseButton: true
+            });
+            mostrar('#seccionHospitales');
+        <?php
+        } else if (isset($_REQUEST["cantidadMinimaEditada"])) {
+        ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Cantidad mínima editada correctamente',
                 timer: 10000,
                 showCloseButton: true
             });

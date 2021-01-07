@@ -184,6 +184,10 @@ td p {
     margin-top: 2vh;
 }
 
+.insumoEscaso {
+    background: #d18890!important;
+}
+
 #cabecera {
     padding-top: 5vh;
     padding-bottom: 5vh;
