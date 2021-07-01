@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../model/database.php';
-if (!$_SESSION["admin"]) {
+if (!isset($_SESSION["admin"])) {
     header("Location: ../index.php?error=true");
 }
 ?>
@@ -39,12 +39,72 @@ if (!$_SESSION["admin"]) {
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
     <title>Gestión de insumos JDR</title>
+    <style>
+        .loader-page {
+            position: fixed;
+            z-index: 25000;
+            background: rgb(255, 255, 255);
+            left: 0px;
+            top: 0px;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .3s ease;
+        }
+
+        .loader-page::before {
+            content: "";
+            position: absolute;
+            border: 2px solid rgb(50, 150, 176);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-sizing: border-box;
+            border-left: 2px solid rgba(50, 150, 176, 0);
+            border-top: 2px solid rgba(50, 150, 176, 0);
+            animation: rotarload 1s linear infinite;
+            transform: rotate(0deg);
+        }
+
+        @keyframes rotarload {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .loader-page::after {
+            content: "";
+            position: absolute;
+            border: 2px solid rgba(50, 150, 176, .5);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-sizing: border-box;
+            border-left: 2px solid rgba(50, 150, 176, 0);
+            border-top: 2px solid rgba(50, 150, 176, 0);
+            animation: rotarload 1s ease-out infinite;
+            transform: rotate(0deg);
+        }
+    </style>
 </head>
 
-
 <body class="container-fluid">
+    <div class="loader-page"></div>
+    <script>
+        $(window).on('load', function() {
+            $(".loader-page").css({
+                visibility: "hidden",
+                opacity: "0"
+            })
+        });
+    </script>
     <?php require_once 'navbar.php'; ?>
-
     <div class="row containerCabecera align-items-center justify-content-center" style="height:initial;">
         <div class="col align-items-center justify-content-center" id="cabecera">
             <div class="col-12 align-items-center justify-content-center">
@@ -53,7 +113,7 @@ if (!$_SESSION["admin"]) {
             </div>
             <div class="col-12">
                 <h3>Filtrar por hospital</h3>
-                <select id="selectHospitales" onchange="filtroHospital()">
+                <select id="selectHospitales" onchange="filtroHospital()" value="0">
                     <?php
                     $queryCentros = "SELECT * FROM CENTRO";
                     $resultadoCentros = mysqli_query($connection, $queryCentros);
@@ -86,8 +146,8 @@ if (!$_SESSION["admin"]) {
                     <thead>
                         <tr>
                             <th>Insumo</th>
-                            <th>Cantidad Mínima</th>
                             <th>Cantidad</th>
+                            <th>Cantidad Mínima</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,8 +162,39 @@ if (!$_SESSION["admin"]) {
                                             echo "insumoEscaso";
                                         } ?>">
                                 <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
-                                <td><?php echo $arraySelectInsumos["CANTIDAD_MINIMA"] ?></td>
                                 <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD_MINIMA"] ?></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <table class="table table1 table-striped" id="tablaBajos<?php echo $arrayCentros["ID"] ?>">
+                    <h2 class="titulo-seccion w-100"><i class="fas fa-exclamation"></i> Insumos Bajos <?php echo $arrayCentros["ABREVIATURA"] ?></h2>
+                    <thead>
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
+                            <th>Cantidad Mínima</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $idCentro = $arrayCentros["ID"];
+                        $selectInsumos = "SELECT * FROM VISTA_INSUMOS_BAJOS WHERE ID_CENTRO = '$idCentro'";
+                        $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+
+                        while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                        ?>
+                            <tr class="<?php if ($arraySelectInsumos["CANTIDAD"] < $arraySelectInsumos["CANTIDAD_MINIMA"]) {
+                                            echo "insumoEscaso";
+                                        } else if ($arraySelectInsumos["CANTIDAD"] > $arraySelectInsumos["CANTIDAD_MINIMA"] && $arraySelectInsumos["CANTIDAD"] <= $arraySelectInsumos["CANTIDAD_BAJA"]) {
+                                            echo "insumoBajo";
+                                        } ?>">
+                                <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                                <td><?php echo $arraySelectInsumos["CANTIDAD_MINIMA"] ?></td>
                             </tr>
                         <?php
                         }
@@ -114,6 +205,7 @@ if (!$_SESSION["admin"]) {
                     <h2 class="titulo-seccion w-100"><i class="fas fa-dolly-flatbed"></i> Inventario <?php echo $arrayCentros["ABREVIATURA"] ?></h2>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Insumo</th>
                             <th>Cantidad Mínima</th>
                             <th>Cantidad</th>
@@ -130,12 +222,19 @@ if (!$_SESSION["admin"]) {
                         ?>
                             <tr class="<?php if ($arraySelectInsumos["CANTIDAD"] < $arraySelectInsumos["CANTIDAD_MINIMA"]) {
                                             echo "insumoEscaso";
+                                        } else if ($arraySelectInsumos["CANTIDAD"] > $arraySelectInsumos["CANTIDAD_MINIMA"] && $arraySelectInsumos["CANTIDAD"] <= $arraySelectInsumos["CANTIDAD_BAJA"]) {
+                                            echo "insumoBajo";
                                         } ?>">
+                                <td><?php echo $arraySelectInsumos["ID_INVENTARIO"] ?></td>
                                 <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
                                 <td><?php echo $arraySelectInsumos["CANTIDAD_MINIMA"] ?></td>
                                 <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
                                 <td>
-                                    <a href="admin.php?editarMinimoInsumo=<?php echo $arraySelectInsumos["ID_INVENTARIO"] ?>&nombreInsumo=<?php echo $arraySelectInsumos["NOMBRE"] ?>&mostrarSeccion=<?php echo $arraySelectInsumos["ID_CENTRO"] ?>&cantidadInsumo=<?php echo $arraySelectInsumos["CANTIDAD"] ?>" class="btn btn-primary" style="border-radius:5px">
+                                    <a href="admin.php?editarMinimoInsumo=<?php echo $arraySelectInsumos["ID_INVENTARIO"] ?>&nombreInsumo=<?php echo $arraySelectInsumos["NOMBRE"] ?>&mostrarSeccion=<?php echo $arraySelectInsumos["ID_CENTRO"] ?>&cantidadInsumo=<?php if (isset($arraySelectInsumos["CANTIDAD_MINIMA"])) {
+                                                                                                                                                                                                                                                                        echo $arraySelectInsumos["CANTIDAD_MINIMA"];
+                                                                                                                                                                                                                                                                    } else {
+                                                                                                                                                                                                                                                                        echo "0";
+                                                                                                                                                                                                                                                                    } ?>" class="btn btn-primary" style="border-radius:5px">
                                         <span style="color: White;">
                                             <i class="fas fa-edit fa-fw"></i> Editar Mínimo
                                         </span>
@@ -149,7 +248,8 @@ if (!$_SESSION["admin"]) {
                 </table>
                 <?php
                 $id = $arrayCentros["ID"];
-                $queryNombreInsumo = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = '$id'";
+                $queryNombreInsumo = "SELECT * FROM VISTA_TRANSACCION WHERE ID_CENTRO = '$id' AND FECHA > CURDATE() - INTERVAL 2 DAY ORDER BY FECHA DESC";
+                echo $queryNombreInsumo;
                 $resultadoQueryInsumo = mysqli_query($connection, $queryNombreInsumo);
                 ?>
                 <table class="table table2 table-striped" id="tablaTransacciones<?php echo $arrayCentros["ID"] ?>">
@@ -188,6 +288,7 @@ if (!$_SESSION["admin"]) {
                         ?>
                     </tbody>
                 </table>
+                <a href="movimientosNuevos.php?idTransacciones=<?php echo $arrayCentros["ID"] ?>" class="btn btn-primary">Ver movimientos completos</a>
             </div>
         <?php
         }
@@ -212,11 +313,45 @@ if (!$_SESSION["admin"]) {
                     ?>
                         <tr class="<?php if ($arraySelectInsumos["CANTIDAD"] < $arraySelectInsumos["CANTIDAD_MINIMA"]) {
                                         echo "insumoEscaso";
+                                    } else if ($arraySelectInsumos["CANTIDAD"] > $arraySelectInsumos["CANTIDAD_MINIMA"] && $arraySelectInsumos["CANTIDAD"] <= $arraySelectInsumos["CANTIDAD_BAJA"]) {
+                                        echo "insumoBajo";
                                     } ?>">
                             <td><?php echo $arraySelectInsumos["NOMBRE_CENTRO"] ?></td>
                             <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
-                            <td><?php echo $arraySelectInsumos["CANTIDAD_MINIMA"] ?></td>
                             <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            <td><?php echo $arraySelectInsumos["CANTIDAD_MINIMA"] ?></td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+            <table class="table table1 table-striped" id="tablaBajosGeneral">
+                <h2 class="titulo-seccion w-100"><i class="fas fa-exclamation"></i> Insumos Bajos </h2>
+                <thead>
+                    <tr>
+                        <th>Centro</th>
+                        <th>Insumo</th>
+                        <th>Cantidad</th>
+                        <th>Cantidad Baja</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $selectInsumos = "SELECT * FROM VISTA_INSUMOS_BAJOS";
+                    $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
+
+                    while ($arraySelectInsumos = mysqli_fetch_array($resultadoSelectInsumos)) {
+                    ?>
+                        <tr class="<?php if ($arraySelectInsumos["CANTIDAD"] < $arraySelectInsumos["CANTIDAD_MINIMA"]) {
+                                        echo "insumoEscaso";
+                                    } else if ($arraySelectInsumos["CANTIDAD"] > $arraySelectInsumos["CANTIDAD_MINIMA"] && $arraySelectInsumos["CANTIDAD"] <= $arraySelectInsumos["CANTIDAD_BAJA"]) {
+                                        echo "insumoBajo";
+                                    } ?>">
+                            <td><?php echo $arraySelectInsumos["NOMBRE_CENTRO"] ?></td>
+                            <td><?php echo $arraySelectInsumos["NOMBRE"] ?></td>
+                            <td><?php echo $arraySelectInsumos["CANTIDAD"] ?></td>
+                            <td><?php echo $arraySelectInsumos["CANTIDAD_BAJA"] ?></td>
                         </tr>
                     <?php
                     }
@@ -248,7 +383,7 @@ if (!$_SESSION["admin"]) {
                 </tbody>
             </table>
             <?php
-            $queryNombreInsumo = "SELECT * FROM VISTA_TRANSACCION";
+            $queryNombreInsumo = "SELECT * FROM VISTA_TRANSACCION ORDER BY FECHA DESC LIMIT 50";
             $resultadoQueryInsumo = mysqli_query($connection, $queryNombreInsumo);
             ?>
             <table class="table table2 table-striped" id="tablaTransaccionesGeneral">
@@ -366,7 +501,6 @@ if (!$_SESSION["admin"]) {
 
         $('.table1').DataTable({
             language: spanishTable, //establece el idioma
-            colReorder: true,
             responsive: true,
             dom: 'fBtlp', // Establece los elementos a mostrar en la tabla
             buttons: [{
@@ -450,6 +584,7 @@ if (!$_SESSION["admin"]) {
             while ($arrayCentros = mysqli_fetch_array($resultadoCentros)) {
             ?>
                 $('#seccion<?php echo $arrayCentros["ID"] ?>').hide();
+                $('#seccionBaja<?php echo $arrayCentros["ID"] ?>').hide();
             <?php
             }
             ?>

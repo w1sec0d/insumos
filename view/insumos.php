@@ -4,7 +4,7 @@ require_once '../model/database.php';
 
 if (isset($_REQUEST["password"])) { // si se intena iniciar sesión
     $_SESSION['tiempo'] = time();   // reestablece el tiempo para que se cierre sesión automáticamente
-    $password = $_REQUEST["password"];
+    $password = $connection->real_escape_string($_REQUEST["password"]);
     if ($password == 'ad3810' or $password == 'Ad3810' or $password == 'AD3810') {
         $_SESSION["admin"] = true;
         $_SESSION["password"] = $_REQUEST["password"];
@@ -68,9 +68,71 @@ if (isset($_REQUEST["password"])) { // si se intena iniciar sesión
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
     <title>Gestión de insumos JDR</title>
+    <style>
+        .loader-page {
+            position: fixed;
+            z-index: 25000;
+            background: rgb(255, 255, 255);
+            left: 0px;
+            top: 0px;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .3s ease;
+        }
+
+        .loader-page::before {
+            content: "";
+            position: absolute;
+            border: 2px solid rgb(50, 150, 176);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-sizing: border-box;
+            border-left: 2px solid rgba(50, 150, 176, 0);
+            border-top: 2px solid rgba(50, 150, 176, 0);
+            animation: rotarload 1s linear infinite;
+            transform: rotate(0deg);
+        }
+
+        @keyframes rotarload {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .loader-page::after {
+            content: "";
+            position: absolute;
+            border: 2px solid rgba(50, 150, 176, .5);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-sizing: border-box;
+            border-left: 2px solid rgba(50, 150, 176, 0);
+            border-top: 2px solid rgba(50, 150, 176, 0);
+            animation: rotarload 1s ease-out infinite;
+            transform: rotate(0deg);
+        }
+    </style>
 </head>
 
 <body class="container-fluid">
+    <div class="loader-page"></div>
+    <script>
+        $(window).on('load', function() {
+            $(".loader-page").css({
+                visibility: "hidden",
+                opacity: "0"
+            })
+        });
+    </script>
     <nav class="row navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">
             <img src="../assets/img/logo.jpeg" width="40" height="30" class="d-inline-block align-top" alt="">
@@ -144,7 +206,7 @@ if (isset($_REQUEST["password"])) { // si se intena iniciar sesión
             </thead>
             <tbody>
                 <?php
-                $idCentro = $_SESSION["idCentro"];
+                $idCentro = $connection->real_escape_string($_SESSION["idCentro"]);
                 $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE TIPO='BOLSAS' AND ID_CENTRO = '$idCentro';";
                 $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
 
@@ -202,7 +264,7 @@ if (isset($_REQUEST["password"])) { // si se intena iniciar sesión
             </thead>
             <tbody>
                 <?php
-                $idCentro = $_SESSION["idCentro"];
+                $idCentro = $connection->real_escape_string($_SESSION["idCentro"]);
                 $selectInsumos = "SELECT * FROM VISTA_INSUMOS WHERE TIPO='TOALLAS' AND ID_CENTRO = '$idCentro';";
                 $resultadoSelectInsumos = mysqli_query($connection, $selectInsumos);
 

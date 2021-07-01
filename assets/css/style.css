@@ -41,7 +41,7 @@ table tbody tr {
 }
 
 table tbody tr:hover {
-    background-color: rgba(187, 219, 155, 0.6)!important;
+    background-color: rgba(255, 255, 255, 0.7)!important;
 }
 
 thead {
@@ -113,6 +113,14 @@ td p {
     display: none;
 }
 
+.insumoEscaso {
+    background: #f8dade!important;
+}
+
+.insumoBajo {
+    background: #fde7d5!important;
+}
+
 .ENTRADA {
     background: rgb(213, 245, 255)!important;
 }
@@ -182,10 +190,6 @@ td p {
 
 .dataTables_length {
     margin-top: 2vh;
-}
-
-.insumoEscaso {
-    background: #d18890!important;
 }
 
 #cabecera {
